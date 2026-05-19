@@ -384,7 +384,7 @@ a { color: inherit; }
 
     <aside class="ff-report" aria-label="Where this chart maps in the whitepaper"><div class="ff-report__row"><span class="ff-report__label">Report section</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">Synthesis across &quot;Exposure gap&quot;, &quot;Prioritization&quot;, &quot;Validate&quot;, and &quot;AI&quot; sections</a></span></div><div class="ff-report__row"><span class="ff-report__label">Whitepaper figure</span><span class="ff-report__value"><span style="color: var(--ff-text-muted);">— not a numbered figure —</span></span><span class="ff-report__fit ff-report__fit--unnumbered">Not a numbered figure</span></div><p class="ff-report__note">Not a whitepaper figure. Pairs are drawn from design callouts scattered across four sections (Exec Summary, The prioritization bottleneck, Validate to assess your readiness, AI and automation). Editorial synthesis — flag for Filigran sign-off.</p></aside>
 
-    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 640"></div></div>
+    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 831"></div></div>
 
 
 
@@ -407,7 +407,7 @@ a { color: inherit; }
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 225 1200 640";</script>
+  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 218 1200 831";</script>
 
   <script type="text/babel" data-presets="react">
 // shared/frame.jsx
@@ -593,23 +593,26 @@ Object.assign(window, { B6_PAIRS });
 
   <script type="text/babel" data-presets="react">
 // Artboard A — Four paired rows.
-// Aspiration stat (muted gray, left) → arrow with "BUT" qualifier → practice
-// stat (bold blue, right). Sized typographically: the numbers are the chart.
+// Aspiration % (left, muted) — gap chip (center, FF accent) — practice % (right, blue).
+// FF type stack: IBM Plex Sans Light for the big numbers, IBM Plex Mono for
+// labels, Inter for body text. The numbers ARE the chart; supporting labels
+// stay restrained.
 
 function B6ArtboardPairedRows() {
   const W = 1200, H = 1100;
   const P = window.FIL_PALETTE;
   const pairs = window.B6_PAIRS;
 
-  const rowTop = 240;
-  const rowH = 168;
+  const rowTop = 250;
+  const rowH = 200;
   const numSize = 92;
-  const sayX = 84;
-  const sayLabelX = 270;
-  const arrowX1 = 540;
-  const arrowX2 = 720;
-  const doX = 740;
-  const doLabelX = 936;
+
+  // X anchor points across the row.
+  const sayNumX  = 84;
+  const sayLabX  = 84;
+  const gapX     = 600;
+  const doNumX   = W - 84;
+  const doLabX   = W - 84;
 
   return (
     <window.ChartFrame
@@ -621,72 +624,85 @@ function B6ArtboardPairedRows() {
       height={H}
       source="Source: Vanson Bourne survey for Filigran, Feb–Mar 2026 · n=550 · sources noted per pair"
     >
+      {/* Column eyebrows above row 1 */}
+      <text x={sayNumX} y={rowTop - 14} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+            fontWeight="500" letterSpacing="1">SAY</text>
+      <text x={gapX} y={rowTop - 14} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.accent}
+            fontWeight="500" letterSpacing="1" textAnchor="middle">GAP</text>
+      <text x={doNumX} y={rowTop - 14} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.blue}
+            fontWeight="500" letterSpacing="1" textAnchor="end">DO</text>
+      <line x1={72} y1={rowTop - 4} x2={W - 72} y2={rowTop - 4} stroke={P.rule} />
+
       {pairs.map((p, i) => {
         const y = rowTop + i * rowH;
-        const arrowY = y + 70;
+        const numBaseline = y + 90;
         const gap = p.say.pct - p.do_.pct;
+
+        // Wrap a string into up to two lines at ~36 chars.
+        const wrap = s => {
+          const words = s.split(' ');
+          const lines = [];
+          let cur = '';
+          for (const wd of words) {
+            if ((cur + ' ' + wd).trim().length > 36) { lines.push(cur.trim()); cur = wd; }
+            else cur = (cur + ' ' + wd).trim();
+          }
+          if (cur) lines.push(cur);
+          return lines.slice(0, 2);
+        };
+        const sayLines = wrap(p.say.label);
+        const doLines  = wrap(p.do_.label);
+
         return (
           <g key={p.key}>
-            {/* Aspiration (muted) */}
-            <text x={sayX} y={y + 72} fontSize={numSize} fill={P.inkSubtle}
-                  fontWeight="600" style={{ letterSpacing: '-0.04em' }}>{p.say.pct}%</text>
-            {(() => {
-              // Wrap aspiration label naively to two lines.
-              const w = 36;
-              const words = p.say.label.split(' ');
-              const lines = [];
-              let cur = '';
-              for (const wd of words) {
-                if ((cur + ' ' + wd).trim().length > w) { lines.push(cur.trim()); cur = wd; }
-                else cur = (cur + ' ' + wd).trim();
-              }
-              if (cur) lines.push(cur);
-              return lines.slice(0, 3).map((ln, li) => (
-                <text key={li} x={sayLabelX} y={y + 40 + li * 22}
-                      fontSize="15" fill={P.inkSoft} fontWeight="500">{ln}</text>
-              ));
-            })()}
+            {/* Aspiration % — muted, IBM Plex Sans Light. */}
+            <text x={sayNumX} y={numBaseline} fontSize={numSize}
+                  fontFamily={window.FIL_FONT_DISPLAY} fill={P.inkSubtle}
+                  fontWeight="300" style={{ letterSpacing: '-0.03em' }}>{p.say.pct}%</text>
 
-            {/* Arrow */}
-            <line x1={arrowX1} y1={arrowY} x2={arrowX2 - 14} y2={arrowY}
-                  stroke={P.accent} strokeWidth="2" />
-            <polygon points={`${arrowX2},${arrowY} ${arrowX2 - 14},${arrowY - 7} ${arrowX2 - 14},${arrowY + 7}`}
-                     fill={P.accent} />
-            <text x={(arrowX1 + arrowX2) / 2} y={arrowY - 14}
-                  fontSize="10" fill={P.accent} fontWeight="700"
-                  letterSpacing="2" textAnchor="middle">BUT ONLY</text>
-            <text x={(arrowX1 + arrowX2) / 2} y={arrowY + 24}
-                  fontSize="11" fill={P.accent} fontWeight="700"
-                  textAnchor="middle">gap {Math.abs(gap)}pp</text>
+            {/* Aspiration label below the number. */}
+            {sayLines.map((ln, li) => (
+              <text key={`sl-${li}`} x={sayLabX} y={numBaseline + 40 + li * 20}
+                    fontSize="14" fontFamily={window.FIL_FONT_BODY}
+                    fill={P.inkSoft} fontWeight="400">{ln}</text>
+            ))}
+            <text x={sayLabX} y={numBaseline + 40 + sayLines.length * 20 + 18}
+                  fontSize="10" fontFamily={window.FIL_FONT_MONO}
+                  fill={P.inkSubtle} fontWeight="400">{p.say.source}</text>
 
-            {/* Practice (bold) */}
-            <text x={doX} y={y + 72} fontSize={numSize} fill={P.blue}
-                  fontWeight="600" style={{ letterSpacing: '-0.04em' }}>{p.do_.pct}%</text>
-            {(() => {
-              const w = 36;
-              const words = p.do_.label.split(' ');
-              const lines = [];
-              let cur = '';
-              for (const wd of words) {
-                if ((cur + ' ' + wd).trim().length > w) { lines.push(cur.trim()); cur = wd; }
-                else cur = (cur + ' ' + wd).trim();
-              }
-              if (cur) lines.push(cur);
-              return lines.slice(0, 3).map((ln, li) => (
-                <text key={li} x={doLabelX} y={y + 40 + li * 22}
-                      fontSize="15" fill={P.ink} fontWeight="600">{ln}</text>
-              ));
-            })()}
+            {/* Gap chip — anchors the eye in the middle. */}
+            <text x={gapX} y={numBaseline - 30} fontSize={48}
+                  fontFamily={window.FIL_FONT_DISPLAY} fill={P.accent}
+                  fontWeight="300" style={{ letterSpacing: '-0.02em' }}
+                  textAnchor="middle">−{Math.abs(gap)}pp</text>
+            <text x={gapX} y={numBaseline - 4} fontSize="11"
+                  fontFamily={window.FIL_FONT_MONO} fill={P.accent}
+                  fontWeight="500" letterSpacing="1" textAnchor="middle">SAY − DO</text>
 
-            {/* Source labels */}
-            <text x={sayX} y={y + 110} fontSize="10" fill={P.inkSubtle}
-                  letterSpacing="1">{p.say.source}</text>
-            <text x={doX} y={y + 110} fontSize="10" fill={P.inkSubtle}
-                  letterSpacing="1">{p.do_.source}</text>
+            {/* Practice % — bold, IBM Plex Sans Light blue. */}
+            <text x={doNumX} y={numBaseline} fontSize={numSize}
+                  fontFamily={window.FIL_FONT_DISPLAY} fill={P.blue}
+                  fontWeight="300" style={{ letterSpacing: '-0.03em' }}
+                  textAnchor="end">{p.do_.pct}%</text>
+
+            {/* Practice label */}
+            {doLines.map((ln, li) => (
+              <text key={`dl-${li}`} x={doLabX} y={numBaseline + 40 + li * 20}
+                    fontSize="14" fontFamily={window.FIL_FONT_BODY}
+                    fill={P.ink} fontWeight="500"
+                    textAnchor="end">{ln}</text>
+            ))}
+            <text x={doLabX} y={numBaseline + 40 + doLines.length * 20 + 18}
+                  fontSize="10" fontFamily={window.FIL_FONT_MONO}
+                  fill={P.inkSubtle} fontWeight="400"
+                  textAnchor="end">{p.do_.source}</text>
 
             {/* Row divider */}
             {i < pairs.length - 1 && (
-              <line x1={72} y1={y + rowH - 16} x2={W - 72} y2={y + rowH - 16}
+              <line x1={72} y1={y + rowH - 8} x2={W - 72} y2={y + rowH - 8}
                     stroke={P.rule} />
             )}
           </g>
