@@ -384,7 +384,7 @@ a { color: inherit; }
 
     <aside class="ff-report" aria-label="Where this chart maps in the whitepaper"><div class="ff-report__row"><span class="ff-report__label">Report section</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">Tools sprawl is real — but direction is clear</a></span></div><div class="ff-report__row"><span class="ff-report__label">Whitepaper figure</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">Figure 3</a></span><span class="ff-report__fit ff-report__fit--clean">Maps cleanly</span></div><p class="ff-report__note">Q10 (want it) crossed with Q9 (barriers) — same buying-criteria dataset as Figure 3, with the Q9 cross-reference layered on top.</p></aside>
 
-    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 624"></div></div>
+    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 562"></div></div>
 
     <div class="ff-callout">
       <div class="ff-callout__bar" aria-hidden="true"></div>
@@ -414,7 +414,7 @@ a { color: inherit; }
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 276 1200 624";</script>
+  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 276 1200 562";</script>
 
   <script type="text/babel" data-presets="react">
 // shared/frame.jsx
@@ -632,14 +632,24 @@ function F3ArtboardWantVsHard() {
       {/* Plot frame */}
       <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0}
             fill={P.blueTint} opacity="0.3" />
-      {/* Parity diagonal */}
-      <line x1={xFor(20)} y1={yFor(20)} x2={xFor(50)} y2={yFor(50)}
-            stroke={P.inkSubtle} strokeWidth="1" strokeDasharray="3 5" />
-      <text x={xFor(50) - 8} y={yFor(50) - 4} fontSize="10"
-            fill={P.inkSubtle} fontWeight="600" textAnchor="end"
-            transform={`rotate(-36, ${xFor(50) - 8}, ${yFor(50) - 4})`}>
-        Parity line · want = block
-      </text>
+
+      {/* WANT / BLOCK key — top-left of the plot, where no data sits. Defines
+          the two axis terms used in every dot label. */}
+      <g>
+        <text x={x0 + 16} y={y0 + 24} fontSize="11"
+              fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+              fontWeight="500" letterSpacing="1">HOW TO READ</text>
+        <text x={x0 + 16} y={y0 + 48} fontSize="13"
+              fontFamily={window.FIL_FONT_BODY} fill={P.ink}>
+          <tspan fontWeight="600">WANT</tspan>
+          <tspan dx="6" fill={P.inkSoft} fontWeight="400">% saying it matters most in new tools · Q10</tspan>
+        </text>
+        <text x={x0 + 16} y={y0 + 68} fontSize="13"
+              fontFamily={window.FIL_FONT_BODY} fill={P.ink}>
+          <tspan fontWeight="600">BLOCK</tspan>
+          <tspan dx="6" fill={P.inkSoft} fontWeight="400">% citing it as a barrier to improving exposure mgmt · Q9</tspan>
+        </text>
+      </g>
 
       {/* Axes */}
       <line x1={x0} y1={y1} x2={x1} y2={y1} stroke={P.inkSubtle} />
