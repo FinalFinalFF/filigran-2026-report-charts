@@ -384,13 +384,13 @@ a { color: inherit; }
 
     <aside class="ff-report" aria-label="Where this chart maps in the whitepaper"><div class="ff-report__row"><span class="ff-report__label">Report section</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">The real cost of poor prioritization: wasted time</a></span></div><div class="ff-report__row"><span class="ff-report__label">Whitepaper figure</span><span class="ff-report__value"><span style="color: var(--ff-text-muted);">— not a numbered figure —</span></span><span class="ff-report__fit ff-report__fit--unnumbered">Not a numbered figure</span></div><p class="ff-report__note">Not a numbered figure. Visualizes the Q13 mean (42%) of analyst time spent on dead-end investigations — referenced in the whitepaper as part of the prioritization-bottleneck argument, not as a labeled figure.</p></aside>
 
-    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 536"></div></div>
+    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 534"></div></div>
 
     <div class="ff-callout">
       <div class="ff-callout__bar" aria-hidden="true"></div>
       <div>
         <p class="ff-callout__label">Pause on this</p>
-        <p class="ff-callout__body">In an average week, the team works through ~17 of 40 hours — about half of Monday, all of Tuesday, plus a slice of Wednesday — on risks that turn out not to matter.</p>
+        <p class="ff-callout__body">In an average week, the team works through ~17 of 40 hours — all of Monday, all of Tuesday, and the first hour of Wednesday — on risks that turn out not to matter.</p>
       </div>
     </div>
 
@@ -414,7 +414,7 @@ a { color: inherit; }
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 226 1200 536";</script>
+  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 228 1200 534";</script>
 
   <script type="text/babel" data-presets="react">
 // shared/frame.jsx
@@ -626,11 +626,14 @@ function B7ArtboardWorkWeek() {
   const wastedDays  = (wastedHours / hoursPerDay).toFixed(1);     // 2.1
 
   // Grid: 5 columns (days), 8 rows (hours).
-  // Wasted hours fill from the top, going day-by-day, so the highlighted
-  // block reads naturally as "the front half of the week."
-  const startX = 248, startY = 264;
+  const startX = 320, startY = 264;
   const cellW = 132, cellH = 56;
   const gap = 6;
+
+  // Decide whether each cell is wasted. Fill DAY-BY-DAY (column-major) so
+  // the visual matches the editorial story: "all of Monday, all of Tuesday,
+  // then a slice of Wednesday." 17 hours = 2 full days + 1 hour.
+  const isWasted = (row, col) => col * hoursPerDay + row < wastedHours;
 
   return (
     <window.ChartFrame
@@ -638,7 +641,7 @@ function B7ArtboardWorkWeek() {
       headline="Two days of every work week, gone."
       subtitle="The 42% of security-team time spent on dead-end investigations, translated into a 5-day week of 8-hour days."
       caption="Q13 · % of time spent on risks that prove low-priority or unexploitable · n=532 · Mean = 42%"
-      callout="In an average week, the team works through ~17 of 40 hours — about half of Monday, all of Tuesday, plus a slice of Wednesday — on risks that turn out not to matter."
+      callout="In an average week, the team works through ~17 of 40 hours — all of Monday, all of Tuesday, and the first hour of Wednesday — on risks that turn out not to matter."
       width={W}
       height={H}
       source="Source: Vanson Bourne survey for Filigran, Feb–Mar 2026 · illustrative; uses Q13 mean of 42%"
@@ -646,66 +649,91 @@ function B7ArtboardWorkWeek() {
       {/* Day-column headers */}
       {days.map((d, ci) => (
         <text key={d} x={startX + ci * (cellW + gap) + cellW / 2}
-              y={startY - 18} fontSize="13" fill={P.inkSoft}
-              fontWeight="700" textAnchor="middle"
-              letterSpacing="2">{d.toUpperCase()}</text>
+              y={startY - 18} fontSize="11"
+              fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+              fontWeight="500" letterSpacing="1"
+              textAnchor="middle">{d.toUpperCase()}</text>
       ))}
 
-      {/* Hour grid */}
+      {/* Hour-of-day axis on the left */}
+      {Array.from({ length: hoursPerDay }, (_, row) => (
+        <text key={`hr-${row}`}
+              x={startX - 16}
+              y={startY + row * (cellH + gap) + cellH / 2 + 5}
+              fontSize="11" fontFamily={window.FIL_FONT_MONO}
+              fill={P.inkSoft} fontWeight="400" textAnchor="end">
+          h{row + 1}
+        </text>
+      ))}
+
+      {/* Hour grid — cells are pure color; no per-cell labels. */}
       {(() => {
         const cells = [];
-        let wastedRemaining = wastedHours;
         for (let row = 0; row < hoursPerDay; row++) {
           for (let col = 0; col < days.length; col++) {
             const x = startX + col * (cellW + gap);
             const y = startY + row * (cellH + gap);
-            const isWasted = wastedRemaining > 0;
+            const wasted = isWasted(row, col);
             cells.push(
-              <g key={`${row}-${col}`}>
-                <rect x={x} y={y} width={cellW} height={cellH}
-                      fill={isWasted ? P.accent : P.blueTint}
-                      rx="0" />
-                <text x={x + 12} y={y + 18} fontSize="10"
-                      fill={isWasted ? P.paper : P.inkSubtle}
-                      fontWeight="700" letterSpacing="1">
-                  HOUR {row + 1}
-                </text>
-                {isWasted && (
-                  <text x={x + 12} y={y + 38} fontSize="11"
-                        fill={P.paper} fontWeight="500">
-                    chasing a false lead
-                  </text>
-                )}
-              </g>
+              <rect key={`${row}-${col}`} x={x} y={y}
+                    width={cellW} height={cellH}
+                    fill={wasted ? P.accent : P.blueTint} rx="0" />
             );
-            if (isWasted) wastedRemaining--;
           }
         }
         return cells;
       })()}
 
-      {/* Side summary block */}
-      <g>
-        <text x={72} y={304} fontSize="11" fill={P.accent}
-              fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">DEAD-WEIGHT HOURS</text>
-        <line x1={72} y1={314} x2={220} y2={314} stroke={P.accent} opacity="0.5" />
-        <text fontFamily={window.FIL_FONT_DISPLAY} x={72} y={372} fontSize="56" fill={P.accent}
-              fontWeight="300">{wastedHours}</text>
-        <text x={72} y={400} fontSize="13" fill={P.ink} fontWeight="600">
-          of 40 work hours
-        </text>
-        <text x={72} y={420} fontSize="13" fill={P.ink} fontWeight="600">
-          per security analyst per week
-        </text>
+      {/* Single annotation into the red block — replaces the 17 repeated
+          "chasing a false lead" labels. */}
+      {(() => {
+        // Anchor the arrow into the middle of the red column block.
+        const targetX = startX + 0 * (cellW + gap) + cellW / 2;
+        const targetY = startY + 4 * (cellH + gap) + cellH / 2;
+        const labelX = startX + 2 * (cellW + gap);
+        const labelY = targetY - 38;
+        return (
+          <g>
+            <text x={labelX} y={labelY} fontSize="13"
+                  fontFamily={window.FIL_FONT_BODY} fill={P.paper}
+                  fontWeight="500" textAnchor="middle"
+                  style={{ paintOrder: 'stroke', stroke: P.accent, strokeWidth: 0 }}>
+              <tspan fill={P.accent} fontFamily={window.FIL_FONT_MONO}
+                     fontWeight="500" style={{ letterSpacing: '1px' }}>CHASING FALSE LEADS</tspan>
+            </text>
+            <path d={`M ${labelX} ${labelY + 8} Q ${labelX - 50} ${labelY + 32} ${targetX + 20} ${targetY - 16}`}
+                  stroke={P.accent} strokeWidth="1.5" fill="none"
+                  strokeDasharray="3 4" />
+          </g>
+        );
+      })()}
 
-        <text x={72} y={478} fontSize="11" fill={P.inkSoft}
-              fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">IN DAYS</text>
-        <line x1={72} y1={488} x2={220} y2={488} stroke={P.rule} />
-        <text fontFamily={window.FIL_FONT_DISPLAY} x={72} y={544} fontSize="56" fill={P.ink}
-              fontWeight="300">{wastedDays}</text>
-        <text x={72} y={572} fontSize="13" fill={P.ink} fontWeight="600">
-          out of 5 working days
-        </text>
+      {/* Side summary block — the two big stats. */}
+      <g>
+        <text x={72} y={304} fontSize="11"
+              fontFamily={window.FIL_FONT_MONO} fill={P.accent}
+              fontWeight="500" letterSpacing="1">DEAD-WEIGHT HOURS</text>
+        <line x1={72} y1={314} x2={240} y2={314} stroke={P.accent} opacity="0.5" />
+        <text fontFamily={window.FIL_FONT_DISPLAY} x={72} y={382}
+              fontSize="72" fill={P.accent} fontWeight="300"
+              style={{ letterSpacing: '-0.02em' }}>{wastedHours}</text>
+        <text x={72} y={410} fontSize="13"
+              fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+              fontWeight="500">of 40 work hours per analyst,</text>
+        <text x={72} y={428} fontSize="13"
+              fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+              fontWeight="500">every week</text>
+
+        <text x={72} y={486} fontSize="11"
+              fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+              fontWeight="500" letterSpacing="1">IN DAYS</text>
+        <line x1={72} y1={496} x2={240} y2={496} stroke={P.rule} />
+        <text fontFamily={window.FIL_FONT_DISPLAY} x={72} y={564}
+              fontSize="72" fill={P.ink} fontWeight="300"
+              style={{ letterSpacing: '-0.02em' }}>{wastedDays}</text>
+        <text x={72} y={592} fontSize="13"
+              fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+              fontWeight="500">out of 5 working days</text>
       </g>
     </window.ChartFrame>
   );
