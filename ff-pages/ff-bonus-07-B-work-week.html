@@ -663,8 +663,8 @@ function B7ArtboardWorkWeek() {
             cells.push(
               <g key={`${row}-${col}`}>
                 <rect x={x} y={y} width={cellW} height={cellH}
-                      fill={isWasted ? P.orange : P.blueTint}
-                      rx="4" />
+                      fill={isWasted ? P.accent : P.blueTint}
+                      rx="0" />
                 <text x={x + 12} y={y + 18} fontSize="10"
                       fill={isWasted ? P.paper : P.inkSubtle}
                       fontWeight="700" letterSpacing="1">
@@ -686,11 +686,11 @@ function B7ArtboardWorkWeek() {
 
       {/* Side summary block */}
       <g>
-        <text x={72} y={304} fontSize="11" fill={P.orange}
-              fontWeight="700" letterSpacing="2">DEAD-WEIGHT HOURS</text>
-        <line x1={72} y1={314} x2={220} y2={314} stroke={P.orange} opacity="0.5" />
-        <text x={72} y={372} fontSize="56" fill={P.orange}
-              fontWeight="800">{wastedHours}</text>
+        <text x={72} y={304} fontSize="11" fill={P.accent}
+              fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">DEAD-WEIGHT HOURS</text>
+        <line x1={72} y1={314} x2={220} y2={314} stroke={P.accent} opacity="0.5" />
+        <text fontFamily={window.FIL_FONT_DISPLAY} x={72} y={372} fontSize="56" fill={P.accent}
+              fontWeight="300">{wastedHours}</text>
         <text x={72} y={400} fontSize="13" fill={P.ink} fontWeight="600">
           of 40 work hours
         </text>
@@ -699,10 +699,10 @@ function B7ArtboardWorkWeek() {
         </text>
 
         <text x={72} y={478} fontSize="11" fill={P.inkSoft}
-              fontWeight="700" letterSpacing="2">IN DAYS</text>
+              fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">IN DAYS</text>
         <line x1={72} y1={488} x2={220} y2={488} stroke={P.rule} />
-        <text x={72} y={544} fontSize="56" fill={P.ink}
-              fontWeight="800">{wastedDays}</text>
+        <text fontFamily={window.FIL_FONT_DISPLAY} x={72} y={544} fontSize="56" fill={P.ink}
+              fontWeight="300">{wastedDays}</text>
         <text x={72} y={572} fontSize="13" fill={P.ink} fontWeight="600">
           out of 5 working days
         </text>

@@ -646,14 +646,14 @@ function F5ArtboardPushPull() {
     >
       {/* Group headers */}
       <text x={axisX - 16} y={252} fontSize="11" fill={P.blueMid}
-            fontWeight="700" letterSpacing="2" textAnchor="end">
+            fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1" textAnchor="end">
         ← OPERATIONAL PUSH
       </text>
       <text x={axisX - 16} y={266} fontSize="11" fill={P.inkSoft}
             fontWeight="500" textAnchor="end">internal capacity</text>
 
       <text x={axisX + 16} y={252} fontSize="11" fill={P.blue}
-            fontWeight="700" letterSpacing="2">
+            fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">
         EXTERNAL PULL →
       </text>
       <text x={axisX + 16} y={266} fontSize="11" fill={P.inkSoft}
@@ -683,10 +683,10 @@ function F5ArtboardPushPull() {
         const w = d.total * ppToPx;
         return (
           <g key={d.key}>
-            <text x={axisX - w - 12} y={yc + 5} fontSize="22" fill={P.blueMid}
-                  fontWeight="800" textAnchor="end">{d.total}%</text>
+            <text fontFamily={window.FIL_FONT_DISPLAY} x={axisX - w - 12} y={yc + 5} fontSize="22" fill={P.blueMid}
+                  fontWeight="300" textAnchor="end">{d.total}%</text>
             <rect x={axisX - w} y={yc - barH / 2} width={w} height={barH}
-                  fill={P.blueMid} rx="3" />
+                  fill={P.blueMid} rx="0" />
             <text x={axisX - 12} y={yc - 18} fontSize="11" fill={P.ink}
                   fontWeight="700" textAnchor="end">{d.short}</text>
             <text x={axisX - 12} y={yc + 22} fontSize="11" fill={P.inkSoft}
@@ -701,10 +701,10 @@ function F5ArtboardPushPull() {
         const w = d.total * ppToPx;
         return (
           <g key={d.key}>
-            <text x={axisX + w + 12} y={yc + 5} fontSize="22" fill={P.blue}
-                  fontWeight="800">{d.total}%</text>
+            <text fontFamily={window.FIL_FONT_DISPLAY} x={axisX + w + 12} y={yc + 5} fontSize="22" fill={P.blue}
+                  fontWeight="300">{d.total}%</text>
             <rect x={axisX} y={yc - barH / 2} width={w} height={barH}
-                  fill={P.blue} rx="3" />
+                  fill={P.blue} rx="0" />
             <text x={axisX + 12} y={yc - 18} fontSize="11" fill={P.ink}
                   fontWeight="700">{d.short}</text>
             <text x={axisX + 12} y={yc + 22} fontSize="11" fill={P.inkSoft}>
@@ -718,7 +718,7 @@ function F5ArtboardPushPull() {
       <line x1={axisX - 320} y1={centerTop - 24} x2={axisX + 320} y2={centerTop - 24}
             stroke={P.rule} />
       <text x={axisX} y={centerTop - 4} fontSize="11" fill={P.good}
-            fontWeight="700" letterSpacing="2" textAnchor="middle">
+            fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1" textAnchor="middle">
         OUTCOME DEMAND · quality of the work
       </text>
       {center.map((d, i) => {
@@ -727,9 +727,9 @@ function F5ArtboardPushPull() {
         return (
           <g key={d.key}>
             <rect x={axisX - w / 2} y={yc - barH / 2} width={w} height={barH}
-                  fill={P.good} rx="3" />
+                  fill={P.good} rx="0" />
             <text x={axisX} y={yc + 7} fontSize="16" fill={P.paper}
-                  fontWeight="800" textAnchor="middle">{d.total}%</text>
+                  fontWeight="600" textAnchor="middle">{d.total}%</text>
             <text x={axisX} y={yc + 32} fontSize="13" fill={P.ink}
                   fontWeight="700" textAnchor="middle">{d.short}</text>
           </g>

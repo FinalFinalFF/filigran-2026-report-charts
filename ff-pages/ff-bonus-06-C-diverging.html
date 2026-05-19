@@ -632,11 +632,11 @@ function B6ArtboardDiverging() {
 
       {/* Side labels */}
       <text x={spineX - 12} y={top - 28} fontSize="11" fill={P.inkSoft}
-            fontWeight="700" letterSpacing="2" textAnchor="end">
+            fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1" textAnchor="end">
         ← WHAT THEY SAY
       </text>
       <text x={spineX + 12} y={top - 28} fontSize="11" fill={P.blue}
-            fontWeight="700" letterSpacing="2">
+            fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">
         WHAT THEY DO →
       </text>
 
@@ -655,25 +655,25 @@ function B6ArtboardDiverging() {
                      L ${spineX + doW} ${ribbonY}
                      L ${spineX + doW} ${ribbonY + ribbonH}
                      L ${spineX - sayW} ${ribbonY + ribbonH} Z`}
-                  fill={P.orangeTint} opacity="0.7" />
+                  fill={P.accentTint} opacity="0.7" />
 
             {/* Aspiration bar */}
             <rect x={spineX - sayW} y={yc - 16} width={sayW} height={32}
-                  fill={P.inkSubtle} rx="3" />
-            <text x={spineX - sayW - 12} y={yc + 8} fontSize="22"
-                  fill={P.inkSoft} fontWeight="800" textAnchor="end">{p.say.pct}%</text>
+                  fill={P.inkSubtle} rx="0" />
+            <text fontFamily={window.FIL_FONT_DISPLAY} x={spineX - sayW - 12} y={yc + 8} fontSize="22"
+                  fill={P.inkSoft} fontWeight="300" textAnchor="end">{p.say.pct}%</text>
 
             {/* Practice bar */}
             <rect x={spineX} y={yc - 16} width={doW} height={32}
-                  fill={P.blue} rx="3" />
-            <text x={spineX + doW + 12} y={yc + 8} fontSize="22"
-                  fill={P.blue} fontWeight="800">{p.do_.pct}%</text>
+                  fill={P.blue} rx="0" />
+            <text fontFamily={window.FIL_FONT_DISPLAY} x={spineX + doW + 12} y={yc + 8} fontSize="22"
+                  fill={P.blue} fontWeight="300">{p.do_.pct}%</text>
 
             {/* Gap badge centered */}
             <rect x={spineX - 36} y={yc - 14} width={72} height={28}
-                  fill={P.orange} rx="14" />
+                  fill={P.accent} rx="0" />
             <text x={spineX} y={yc + 6} fontSize="14" fill={P.paper}
-                  fontWeight="800" textAnchor="middle">−{gap}pp</text>
+                  fontWeight="600" textAnchor="middle">−{gap}pp</text>
 
             {/* Side labels — wrapped across two lines so 60-char survey
                 statements don't crash into each other across the spine. */}

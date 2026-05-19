@@ -643,11 +643,11 @@ function B7ArtboardTimeline() {
     >
       {/* Wasted-time strip (overhead) */}
       <text x={tlX0} y={stripY - 8} fontSize="10" fill={P.inkSoft}
-            fontWeight="700" letterSpacing="2">OF SECURITY-TEAM TIME · Q13 mean</text>
+            fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">OF SECURITY-TEAM TIME · Q13 mean</text>
       <rect x={tlX0} y={stripY} width={tlX1 - tlX0} height={stripH}
-            fill={P.ruleSoft} rx="4" />
+            fill={P.ruleSoft} rx="0" />
       <rect x={tlX0} y={stripY} width={(tlX1 - tlX0) * window.B7_WASTED_PCT / 100} height={stripH}
-            fill={P.orange} rx="4" />
+            fill={P.accent} rx="0" />
       <text x={tlX0 + 14} y={stripY + 26} fontSize="13" fill={P.paper}
             fontWeight="700">
         42% spent investigating risks that prove low-priority or unexploitable
@@ -665,7 +665,7 @@ function B7ArtboardTimeline() {
           return (
             <g key={s.key}>
               <rect x={x} y={tlY} width={w} height={segH}
-                    fill={colors[i]} rx="6" />
+                    fill={colors[i]} rx="0" />
               <text x={x + 16} y={tlY + 28} fontSize="16"
                     fill={textColor} fontWeight="700">{s.label}</text>
               <text x={x + 16} y={tlY + 50} fontSize="12"

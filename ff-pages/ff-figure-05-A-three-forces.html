@@ -655,13 +655,13 @@ function F5ArtboardThreeForces() {
         return (
           <g key={f}>
             {/* Column eyebrow + average */}
-            <rect x={x} y={colTop} width={colW} height={56} fill={tint} rx="4" />
+            <rect x={x} y={colTop} width={colW} height={56} fill={tint} rx="0" />
             <text x={x + 18} y={colTop + 22} fontSize="11" fill={c}
-                  fontWeight="700" letterSpacing="2">{meta[f].short.toUpperCase()}</text>
+                  fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">{meta[f].short.toUpperCase()}</text>
             <text x={x + 18} y={colTop + 42} fontSize="12" fill={P.ink}
                   fontWeight="500">{meta[f].long}</text>
-            <text x={x + colW - 18} y={colTop + 38} fontSize="26" fill={c}
-                  fontWeight="800" textAnchor="end">{avgs[f].toFixed(0)}%</text>
+            <text fontFamily={window.FIL_FONT_DISPLAY} x={x + colW - 18} y={colTop + 38} fontSize="26" fill={c}
+                  fontWeight="300" textAnchor="end">{avgs[f].toFixed(0)}%</text>
             <text x={x + colW - 18} y={colTop + 50} fontSize="10" fill={P.inkSoft}
                   fontWeight="500" letterSpacing="1" textAnchor="end">AVG · TOTAL</text>
 
@@ -673,12 +673,12 @@ function F5ArtboardThreeForces() {
                 <g key={d.key}>
                   <text x={x + 18} y={ry + 6} fontSize="13" fill={P.ink}
                         fontWeight="700">{d.short}</text>
-                  <text x={x + colW - 18} y={ry + 6} fontSize="18" fill={c}
-                        fontWeight="800" textAnchor="end">{d.total}%</text>
+                  <text fontFamily={window.FIL_FONT_DISPLAY} x={x + colW - 18} y={ry + 6} fontSize="18" fill={c}
+                        fontWeight="300" textAnchor="end">{d.total}%</text>
                   <rect x={x + 18} y={ry + 14} width={colW - 36} height={10}
-                        fill={tint} rx="3" />
+                        fill={tint} rx="0" />
                   <rect x={x + 18} y={ry + 14} width={w} height={10}
-                        fill={c} rx="3" />
+                        fill={c} rx="0" />
                   <text x={x + 18} y={ry + 42} fontSize="11" fill={P.inkSoft}>
                     {/* trimmed long-form */}
                     {d.label.length > 56 ? d.label.slice(0, 54) + '…' : d.label}
@@ -693,7 +693,7 @@ function F5ArtboardThreeForces() {
       {/* Bottom track: three forces shown as a single horizontal balanced bar */}
       <g>
         <text x={startX} y={754} fontSize="10" fill={P.inkSoft}
-              fontWeight="700" letterSpacing="2">THE BALANCE OF FORCES · weighted avg of drivers in each group</text>
+              fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">THE BALANCE OF FORCES · weighted avg of drivers in each group</text>
         <line x1={startX} y1={764} x2={startX + total} y2={764}
               stroke={P.rule} />
         {(() => {
@@ -708,7 +708,7 @@ function F5ArtboardThreeForces() {
             return (
               <g key={`bal-${f}`}>
                 <rect x={here} y={772} width={w} height={32}
-                      fill={c} rx="2" />
+                      fill={c} rx="0" />
                 <text x={here + w / 2} y={793} fontSize="12" fill={P.paper}
                       fontWeight="700" textAnchor="middle">
                   {meta[f].short} {avgs[f].toFixed(0)}%

@@ -709,11 +709,11 @@ function F4ArtboardTipping() {
 
       {/* Highlight tipping line */}
       <line x1={xFor(tippingT)} y1={y0} x2={xFor(tippingT)} y2={y1}
-            stroke={P.orange} strokeWidth="2" strokeDasharray="5 4" />
+            stroke={P.accent} strokeWidth="2" strokeDasharray="5 4" />
       <rect x={xFor(tippingT) - 76} y={y0 - 6} width={152} height={24}
-            fill={P.orange} rx="3" />
+            fill={P.accent} rx="0" />
       <text x={xFor(tippingT)} y={y0 + 11} fontSize="11" fill={P.paper}
-            fontWeight="700" letterSpacing="2" textAnchor="middle">TIPPING POINT</text>
+            fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1" textAnchor="middle">TIPPING POINT</text>
 
       {/* Filled area between the two lines */}
       {(() => {
@@ -750,12 +750,12 @@ function F4ArtboardTipping() {
                 fill={P.paper} stroke={P.inkSoft} strokeWidth="3" />
         <circle cx={xFor(tippingT)} cy={yFor(tFuture)} r="9"
                 fill={P.paper} stroke={P.blue} strokeWidth="3" />
-        <text x={xFor(tippingT) + 18} y={yFor(tToday) + 5}
-              fontSize="20" fill={P.inkSoft} fontWeight="800">
+        <text fontFamily={window.FIL_FONT_DISPLAY} x={xFor(tippingT) + 18} y={yFor(tToday) + 5}
+              fontSize="20" fill={P.inkSoft} fontWeight="300">
           {Math.round(tToday)}%
         </text>
-        <text x={xFor(tippingT) + 18} y={yFor(tFuture) + 5}
-              fontSize="22" fill={P.blue} fontWeight="800">
+        <text fontFamily={window.FIL_FONT_DISPLAY} x={xFor(tippingT) + 18} y={yFor(tFuture) + 5}
+              fontSize="22" fill={P.blue} fontWeight="300">
           {Math.round(tFuture)}%
         </text>
       </g>

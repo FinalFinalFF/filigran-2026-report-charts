@@ -656,7 +656,7 @@ function F5ArtboardHeatmap() {
     const delta = d.laggards - d.leaders;
     return {
       delta,
-      color: delta > 5 ? P.orange : delta < -5 ? P.blue : P.inkSubtle,
+      color: delta > 5 ? P.accent : delta < -5 ? P.blue : P.inkSubtle,
       arrow: delta > 5 ? '↗' : delta < -5 ? '↘' : '→',
     };
   };
@@ -677,7 +677,7 @@ function F5ArtboardHeatmap() {
         return (
           <g key={c.key}>
             <text x={cx + cellW / 2} y={startY - 28} fontSize="11" fill={P.inkSoft}
-                  fontWeight="700" letterSpacing="2" textAnchor="middle">
+                  fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1" textAnchor="middle">
               {c.label.toUpperCase()}
             </text>
             <text x={cx + cellW / 2} y={startY - 10} fontSize="11" fill={P.inkSubtle}
@@ -689,7 +689,7 @@ function F5ArtboardHeatmap() {
       {/* Right-side trend column header */}
       <text x={startX + 3 * (cellW + gap) + 38} y={startY - 28}
             fontSize="11" fill={P.inkSoft}
-            fontWeight="700" letterSpacing="2">LAGGARD vs LEADER</text>
+            fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">LAGGARD vs LEADER</text>
 
       {/* Rows */}
       {rows.map((d, ri) => {
@@ -712,17 +712,17 @@ function F5ArtboardHeatmap() {
               return (
                 <g key={c.key}>
                   <rect x={cx} y={y} width={cellW} height={cellH}
-                        fill={fill} rx="3" />
-                  <text x={cx + cellW / 2} y={y + cellH / 2 + 8}
-                        fontSize="26" fill={fg} fontWeight="800"
+                        fill={fill} rx="0" />
+                  <text fontFamily={window.FIL_FONT_DISPLAY} x={cx + cellW / 2} y={y + cellH / 2 + 8}
+                        fontSize="26" fill={fg} fontWeight="300"
                         textAnchor="middle">{val}%</text>
                 </g>
               );
             })}
 
             {/* Trend chip */}
-            <text x={startX + 3 * (cellW + gap) + 38} y={y + cellH / 2 + 8}
-                  fontSize="22" fill={trend.color} fontWeight="800">
+            <text fontFamily={window.FIL_FONT_DISPLAY} x={startX + 3 * (cellW + gap) + 38} y={y + cellH / 2 + 8}
+                  fontSize="22" fill={trend.color} fontWeight="300">
               {trend.arrow} {trend.delta > 0 ? '+' : ''}{trend.delta}pp
             </text>
           </g>
@@ -732,7 +732,7 @@ function F5ArtboardHeatmap() {
       {/* Legend */}
       <g>
         <text x={72} y={770} fontSize="10" fill={P.inkSoft}
-              fontWeight="700" letterSpacing="2">READING THE SCALE</text>
+              fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">READING THE SCALE</text>
         <line x1={72} y1={780} x2={460} y2={780} stroke={P.rule} />
         {(() => {
           const stops = [30, 35, 40, 45, 50, 55, 60];
@@ -740,7 +740,7 @@ function F5ArtboardHeatmap() {
           return stops.map((v, i) => (
             <g key={v}>
               <rect x={72 + i * (sw + 4)} y={792} width={sw} height={20}
-                    fill={fillForVal(v)} rx="2" />
+                    fill={fillForVal(v)} rx="0" />
               <text x={72 + i * (sw + 4) + sw / 2} y={825}
                     fontSize="11" fill={P.inkSoft}
                     textAnchor="middle">{v}%</text>

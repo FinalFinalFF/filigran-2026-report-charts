@@ -629,7 +629,7 @@ function B6ArtboardPairedRows() {
           <g key={p.key}>
             {/* Aspiration (muted) */}
             <text x={sayX} y={y + 72} fontSize={numSize} fill={P.inkSubtle}
-                  fontWeight="800" style={{ letterSpacing: '-0.04em' }}>{p.say.pct}%</text>
+                  fontWeight="600" style={{ letterSpacing: '-0.04em' }}>{p.say.pct}%</text>
             {(() => {
               // Wrap aspiration label naively to two lines.
               const w = 36;
@@ -649,19 +649,19 @@ function B6ArtboardPairedRows() {
 
             {/* Arrow */}
             <line x1={arrowX1} y1={arrowY} x2={arrowX2 - 14} y2={arrowY}
-                  stroke={P.orange} strokeWidth="2" />
+                  stroke={P.accent} strokeWidth="2" />
             <polygon points={`${arrowX2},${arrowY} ${arrowX2 - 14},${arrowY - 7} ${arrowX2 - 14},${arrowY + 7}`}
-                     fill={P.orange} />
+                     fill={P.accent} />
             <text x={(arrowX1 + arrowX2) / 2} y={arrowY - 14}
-                  fontSize="10" fill={P.orange} fontWeight="700"
+                  fontSize="10" fill={P.accent} fontWeight="700"
                   letterSpacing="2" textAnchor="middle">BUT ONLY</text>
             <text x={(arrowX1 + arrowX2) / 2} y={arrowY + 24}
-                  fontSize="11" fill={P.orange} fontWeight="700"
+                  fontSize="11" fill={P.accent} fontWeight="700"
                   textAnchor="middle">gap {Math.abs(gap)}pp</text>
 
             {/* Practice (bold) */}
             <text x={doX} y={y + 72} fontSize={numSize} fill={P.blue}
-                  fontWeight="800" style={{ letterSpacing: '-0.04em' }}>{p.do_.pct}%</text>
+                  fontWeight="600" style={{ letterSpacing: '-0.04em' }}>{p.do_.pct}%</text>
             {(() => {
               const w = 36;
               const words = p.do_.label.split(' ');

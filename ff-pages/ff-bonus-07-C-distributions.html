@@ -623,7 +623,7 @@ function B7ArtboardDistributions() {
     '< 1 day':       P.good,
     '1–2 days':      P.blueLight,
     '2–5 days':      P.blueMid,
-    '> 5 days':      P.orange,
+    '> 5 days':      P.accent,
     'Not measured':  P.inkSubtle,
   })[key] || P.inkSubtle;
 
@@ -656,8 +656,8 @@ function B7ArtboardDistributions() {
             </text>
 
             {/* "More than a day" callout, right aligned */}
-            <text x={stripX1} y={y - 30} fontSize="26" fill={P.orange}
-                  fontWeight="800" textAnchor="end">{s.overOneDay}%</text>
+            <text fontFamily={window.FIL_FONT_DISPLAY} x={stripX1} y={y - 30} fontSize="26" fill={P.accent}
+                  fontWeight="300" textAnchor="end">{s.overOneDay}%</text>
             <text x={stripX1} y={y - 12} fontSize="11" fill={P.inkSoft}
                   fontWeight="600" textAnchor="end" letterSpacing="1">
               TAKE MORE THAN A DAY
@@ -684,7 +684,7 @@ function B7ArtboardDistributions() {
                         <text x={here + 12} y={y + 22} fontSize="11"
                               fill={fg} fontWeight="700">{b.bucket}</text>
                         <text x={here + 12} y={y + 42} fontSize="14"
-                              fill={fg} fontWeight="800">{b.pct.toFixed(1)}%</text>
+                              fill={fg} fontWeight="600">{b.pct.toFixed(1)}%</text>
                       </g>
                     )}
                   </g>
@@ -698,9 +698,9 @@ function B7ArtboardDistributions() {
               return (
                 <g>
                   <line x1={cutoff} y1={y - 10} x2={cutoff} y2={y + stripH + 14}
-                        stroke={P.orange} strokeWidth="2" strokeDasharray="3 4" />
+                        stroke={P.accent} strokeWidth="2" strokeDasharray="3 4" />
                   <text x={cutoff} y={y + stripH + 30} fontSize="10"
-                        fill={P.orange} fontWeight="700" letterSpacing="1"
+                        fill={P.accent} fontWeight="700" letterSpacing="1"
                         textAnchor="middle">↑ 1-DAY THRESHOLD</text>
                 </g>
               );
@@ -712,7 +712,7 @@ function B7ArtboardDistributions() {
       {/* Legend strip */}
       <g>
         <text x={stripX0} y={H - 196} fontSize="10" fill={P.inkSoft}
-              fontWeight="700" letterSpacing="2">DURATION BUCKETS</text>
+              fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">DURATION BUCKETS</text>
         <line x1={stripX0} y1={H - 186} x2={stripX1} y2={H - 186} stroke={P.rule} />
         {(() => {
           const keys = ['< 1 day', '1–2 days', '2–5 days', '> 5 days', 'Not measured'];
@@ -724,7 +724,7 @@ function B7ArtboardDistributions() {
             return (
               <g key={k}>
                 <rect x={here} y={H - 174} width="16" height="16"
-                      fill={bucketColor(k)} rx="2" />
+                      fill={bucketColor(k)} rx="0" />
                 <text x={here + 24} y={H - 161} fontSize="12" fill={P.ink}
                       fontWeight="500">{k}</text>
               </g>

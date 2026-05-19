@@ -675,12 +675,12 @@ function F3ArtboardWantVsHard() {
       </text>
 
       {/* Quadrant captions */}
-      <text x={x1 - 12} y={y0 + 16} fontSize="10" fill={P.orange}
-            fontWeight="700" letterSpacing="2" textAnchor="end">
+      <text x={x1 - 12} y={y0 + 16} fontSize="10" fill={P.accent}
+            fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1" textAnchor="end">
         WANTED · AND MISSING
       </text>
       <text x={x0 + 12} y={y1 - 12} fontSize="10" fill={P.inkSubtle}
-            fontWeight="700" letterSpacing="2">
+            fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">
         LESS WANTED · LESS BLOCKING
       </text>
 
@@ -688,7 +688,7 @@ function F3ArtboardWantVsHard() {
       {plotted.map(c => {
         const cx = xFor(c.total), cy = yFor(c.q9barrier);
         const aboveDiagonal = c.q9barrier > c.total;
-        const dotColor = aboveDiagonal ? P.orange : P.blue;
+        const dotColor = aboveDiagonal ? P.accent : P.blue;
         const emphasis = c.key === 'integ';
         const off = labelOffsets[c.key] || { dx: 14, dy: 5, anchor: 'start' };
         return (
@@ -717,7 +717,7 @@ function F3ArtboardWantVsHard() {
 
       {/* Unmatched criteria — small chip row, so the chart still shows you all 9 */}
       <text x={72} y={780} fontSize="10" fill={P.inkSoft}
-            fontWeight="700" letterSpacing="2">UNMATCHED CRITERIA · no direct Q9 barrier counterpart</text>
+            fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">UNMATCHED CRITERIA · no direct Q9 barrier counterpart</text>
       <line x1={72} y1={790} x2={W - 72} y2={790} stroke={P.rule} />
       {(() => {
         const elems = [];
@@ -727,7 +727,7 @@ function F3ArtboardWantVsHard() {
           elems.push(
             <g key={`chip-${c.key}`}>
               <rect x={xCur} y={804} width={chipW} height={26}
-                    fill={P.blueTint} rx="13" />
+                    fill={P.blueTint} rx="0" />
               <text x={xCur + 14} y={821} fontSize="12" fill={P.ink}
                     fontWeight="600">{c.short}</text>
               <text x={xCur + chipW - 14} y={821} fontSize="12" fill={P.blue}

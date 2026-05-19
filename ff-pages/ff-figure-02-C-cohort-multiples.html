@@ -624,8 +624,8 @@ function F2ArtboardCohortMultiples() {
     const cx = gridX0 + col * (cardW + gx);
     const cy = gridY0 + row * (cardH + gy);
     const emphasis = b.key === 'skills';
-    const accent = emphasis ? P.orange : P.blue;
-    const accentSoft = emphasis ? P.orangeTint : P.blueLight;
+    const accent = emphasis ? P.accent : P.blue;
+    const accentSoft = emphasis ? P.accentTint : P.blueLight;
     const cohorts = [
       { label: 'Fully consolidated view',  v: b.leaders, n: 224 },
       { label: 'Mostly consolidated',       v: b.mid,     n: 268 },
@@ -641,14 +641,14 @@ function F2ArtboardCohortMultiples() {
       const isLast = i === 2;
       elems.push(
         <text key={`l-${i}`} x={cx + barX0} y={cy + by - 6} fontSize="10"
-              fill={isLast && emphasis ? P.orange : P.inkSoft}
+              fill={isLast && emphasis ? P.accent : P.inkSoft}
               fontWeight={isLast && emphasis ? 700 : 500}>{c.label}</text>,
         <rect key={`bg-${i}`} x={cx + barX0} y={cy + by} width={barW} height={barH}
-              fill={accentSoft} opacity="0.4" rx="3" />,
+              fill={accentSoft} opacity="0.4" rx="0" />,
         <rect key={`fg-${i}`} x={cx + barX0} y={cy + by} width={w} height={barH}
-              fill={isLast && emphasis ? P.orange : (isLast ? P.blueMid : (i === 0 ? P.blue : P.blueMid))}
+              fill={isLast && emphasis ? P.accent : (isLast ? P.blueMid : (i === 0 ? P.blue : P.blueMid))}
               opacity={isLast || i === 0 ? 1 : 0.65}
-              rx="3" />,
+              rx="0" />,
         <text key={`v-${i}`} x={cx + barX0 + w + 8} y={cy + by + 13}
               fontSize="12" fill={P.ink} fontWeight="700">{c.v}%</text>
       );
@@ -656,17 +656,17 @@ function F2ArtboardCohortMultiples() {
     });
     // Delta chip (laggards − leaders)
     const delta = b.laggards - b.leaders;
-    const deltaColor = delta > 5 ? P.orange : delta < -5 ? P.blue : P.inkSubtle;
+    const deltaColor = delta > 5 ? P.accent : delta < -5 ? P.blue : P.inkSubtle;
     const deltaText = `${delta > 0 ? '+' : ''}${delta}pp gap`;
     return (
       <g key={b.key}>
         {/* Card */}
         <rect x={cx} y={cy} width={cardW} height={cardH}
-              fill={P.paper} stroke={emphasis ? P.orange : P.rule}
-              strokeWidth={emphasis ? 2 : 1} rx="6" />
+              fill={P.paper} stroke={emphasis ? P.accent : P.rule}
+              strokeWidth={emphasis ? 2 : 1} rx="0" />
         {/* Card eyebrow */}
         <text x={cx + 18} y={cy + 30} fontSize="10" fill={P.inkSoft}
-              fontWeight="700" letterSpacing="2">#{ix + 1} BARRIER</text>
+              fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">#{ix + 1} BARRIER</text>
         {/* Card title */}
         <text x={cx + 18} y={cy + 56} fontSize="16" fill={P.ink}
               fontWeight="700">{b.short}</text>
@@ -675,7 +675,7 @@ function F2ArtboardCohortMultiples() {
           {b.total}% overall · cohort gap
         </text>
         <text x={cx + cardW - 18} y={cy + 84} fontSize="14" fill={deltaColor}
-              fontWeight="800" textAnchor="end">{deltaText}</text>
+              fontWeight="600" textAnchor="end">{deltaText}</text>
         {/* Hairline */}
         <line x1={cx + 18} y1={cy + 100} x2={cx + cardW - 18} y2={cy + 100}
               stroke={P.rule} />
@@ -707,9 +707,9 @@ function F2ArtboardCohortMultiples() {
       {/* Synthesis tile */}
       <g>
         <rect x={cx8} y={cy8} width={cardW} height={cardH}
-              fill={P.blue} rx="6" />
+              fill={P.blue} rx="0" />
         <text x={cx8 + 18} y={cy8 + 30} fontSize="10" fill={P.paper}
-              fontWeight="700" letterSpacing="2" opacity="0.8">THE PATTERN</text>
+              fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1" opacity="0.8">THE PATTERN</text>
         <text x={cx8 + 18} y={cy8 + 76} fontSize="22" fill={P.paper}
               fontWeight="700" style={{ letterSpacing: '-0.01em' }}>
           <tspan x={cx8 + 18} dy="0">For 6 of 7 barriers,</tspan>
