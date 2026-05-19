@@ -384,7 +384,7 @@ a { color: inherit; }
 
     <aside class="ff-report" aria-label="Where this chart maps in the whitepaper"><div class="ff-report__row"><span class="ff-report__label">Report section</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">The prioritization bottleneck</a></span></div><div class="ff-report__row"><span class="ff-report__label">Whitepaper figure</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">Figure 2</a></span><span class="ff-report__fit ff-report__fit--clean">Maps cleanly</span></div><p class="ff-report__note">Same Q17 data as whitepaper Figure 2, plotted against the consolidated-view cohort gap from the Exposure Management screener.</p></aside>
 
-    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root"></div></div>
+    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 760"></div></div>
 
     <div class="ff-callout">
       <div class="ff-callout__bar" aria-hidden="true"></div>
@@ -607,15 +607,19 @@ Object.assign(window, { F2_HEADLINE_PCT, F2_BARRIERS, F2_OP, F2_CAP, F2_ALL });
 // solved problem. The four quadrants are labeled.
 
 function F2ArtboardQuadrant() {
-  const W = 1200, H = 900;
+  // Custom shorter viewBox for this chart (default is 1200x900). The
+  // quadrant chart has no in-SVG editorial chrome (callout/source live in
+  // HTML) so the SVG only needs to be tall enough for the plot plus its
+  // x-axis labels. The companion FF page wires .ff-chart__inner to the
+  // matching aspect-ratio (see CHART_ASPECTS in generate.py).
+  const W = 1200, H = 760;
   const P = window.FIL_PALETTE;
 
-  // Plot rect. Right edge stops before the x=952 legend rail; vertical span
-  // is generous (590px high) so dots near the top/bottom of the y-domain have
-  // breathing room from the quadrant eyebrows and so the chart fills the
-  // available frame height rather than sitting compact in the middle.
+  // Plot rect. Right edge stops before the x=952 legend rail. y0=80 places
+  // the upper-quadrant eyebrows just below the card top edge; y1=670 leaves
+  // room for the x-axis ticks (y1+22) and axis label (y1+52) inside H=760.
   const x0 = 200, x1 = 920;
-  const y0 = 200, y1 = 790;
+  const y0 = 80, y1 = 670;
 
   // X domain: 30 → 55 (% citing). Y domain: −15 → +15 pp gap.
   const xDomain = [30, 55];
@@ -757,31 +761,32 @@ function F2ArtboardQuadrant() {
         );
       })}
 
-      {/* Right-side mini-legend — FF type stack. */}
+      {/* Right-side mini-legend — FF type stack. Y values shifted up to fit
+          the new shorter viewBox (H=760). */}
       <g>
-        <window.FrameLegendSection x={W - 248} y={250} w={176} title="READING THIS">
-          <text x={W - 248} y={278} fontSize="13"
+        <window.FrameLegendSection x={W - 248} y={100} w={176} title="READING THIS">
+          <text x={W - 248} y={128} fontSize="13"
                 fontFamily={window.FIL_FONT_BODY} fill={P.ink} fontWeight="400">
             <tspan x={W - 248} dy="0">Position = how common</tspan>
             <tspan x={W - 248} dy="17">and how cohort-skewed</tspan>
             <tspan x={W - 248} dy="17">each barrier is.</tspan>
           </text>
-          <circle cx={W - 240} cy={350} r="7" fill={P.accent} />
-          <text x={W - 224} y={354} fontSize="13"
+          <circle cx={W - 240} cy={200} r="7" fill={P.accent} />
+          <text x={W - 224} y={204} fontSize="13"
                 fontFamily={window.FIL_FONT_BODY} fill={P.ink} fontWeight="400">Worse for laggards</text>
-          <circle cx={W - 240} cy={376} r="7" fill={P.blue} />
-          <text x={W - 224} y={380} fontSize="13"
+          <circle cx={W - 240} cy={226} r="7" fill={P.blue} />
+          <text x={W - 224} y={230} fontSize="13"
                 fontFamily={window.FIL_FONT_BODY} fill={P.ink} fontWeight="400">Worse for leaders</text>
-          <circle cx={W - 240} cy={402} r="7" fill={P.inkSoft} />
-          <text x={W - 224} y={406} fontSize="13"
+          <circle cx={W - 240} cy={252} r="7" fill={P.inkSoft} />
+          <text x={W - 224} y={256} fontSize="13"
                 fontFamily={window.FIL_FONT_BODY} fill={P.ink} fontWeight="400">Roughly equal</text>
         </window.FrameLegendSection>
 
-        <window.FrameLegendSection x={W - 248} y={444} w={176} title="THE OUTLIER">
-          <text x={W - 248} y={490} fontSize="44"
+        <window.FrameLegendSection x={W - 248} y={310} w={176} title="THE OUTLIER">
+          <text x={W - 248} y={356} fontSize="44"
                 fontFamily={window.FIL_FONT_DISPLAY} fill={P.accent}
                 fontWeight="300" style={{ letterSpacing: '-0.02em' }}>+12pp</text>
-          <text x={W - 248} y={516} fontSize="12"
+          <text x={W - 248} y={382} fontSize="12"
                 fontFamily={window.FIL_FONT_BODY} fill={P.inkSoft} fontWeight="400">
             <tspan x={W - 248} dy="0">Skills/expertise gap between</tspan>
             <tspan x={W - 248} dy="15">fully-consolidated and least-</tspan>
