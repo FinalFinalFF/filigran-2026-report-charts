@@ -618,10 +618,13 @@ function F5ArtboardHeatmap() {
 
   // Sort drivers by topline desc so the heaviest drivers sit at top.
   const rows = [...window.F5_DRIVERS].sort((a, b) => b.total - a.total);
+  // Cohort labels kept tight so each fits in its 180px column header
+  // without colliding with the next. Full descriptions live in the
+  // caption + the chart's data table on the FF page.
   const cols = [
-    { key: 'leaders',  label: 'Fully consolidated view',     n: 224 },
-    { key: 'mid',      label: 'Mostly consolidated',          n: 268 },
-    { key: 'laggards', label: 'Partial / limited / no view',  n: 57 },
+    { key: 'leaders',  label: 'Fully consolidated', n: 224 },
+    { key: 'mid',      label: 'Mostly',             n: 268 },
+    { key: 'laggards', label: 'Partial or none',    n: 57 },
   ];
 
   // Geometry.
@@ -671,17 +674,19 @@ function F5ArtboardHeatmap() {
       width={W}
       height={H}
     >
-      {/* Column headers */}
+      {/* Column headers — cohort name (mono caps) above, base size below. */}
       {cols.map((c, ci) => {
         const cx = startX + ci * (cellW + gap);
         return (
           <g key={c.key}>
-            <text x={cx + cellW / 2} y={startY - 28} fontSize="11" fill={P.inkSoft}
-                  fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1" textAnchor="middle">
+            <text x={cx + cellW / 2} y={startY - 28} fontSize="11"
+                  fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+                  fontWeight="500" letterSpacing="1" textAnchor="middle">
               {c.label.toUpperCase()}
             </text>
-            <text x={cx + cellW / 2} y={startY - 10} fontSize="11" fill={P.inkSubtle}
-                  fontWeight="500" textAnchor="middle">n = {c.n}</text>
+            <text x={cx + cellW / 2} y={startY - 10} fontSize="11"
+                  fontFamily={window.FIL_FONT_MONO} fill={P.inkSubtle}
+                  fontWeight="400" textAnchor="middle">n = {c.n}</text>
           </g>
         );
       })}
@@ -697,11 +702,13 @@ function F5ArtboardHeatmap() {
         const trend = trendFor(d);
         return (
           <g key={d.key}>
-            {/* Row label */}
+            {/* Row label — name above, overall % below. */}
             <text x={startX - 16} y={y + cellH / 2 - 4} fontSize="14"
-                  fill={P.ink} fontWeight="700" textAnchor="end">{d.short}</text>
-            <text x={startX - 16} y={y + cellH / 2 + 14} fontSize="10"
-                  fill={P.inkSoft} textAnchor="end">{d.total}% overall</text>
+                  fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                  fontWeight="500" textAnchor="end">{d.short}</text>
+            <text x={startX - 16} y={y + cellH / 2 + 14} fontSize="11"
+                  fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+                  fontWeight="400" textAnchor="end">{d.total}% overall</text>
 
             {/* Cells */}
             {cols.map((c, ci) => {
@@ -720,32 +727,40 @@ function F5ArtboardHeatmap() {
               );
             })}
 
-            {/* Trend chip */}
+            {/* Trend chip — laggard minus leader gap. 'pp' suffix dropped;
+                the column header 'LAGGARD vs LEADER' already says these are
+                percentage-point gaps. */}
             <text fontFamily={window.FIL_FONT_DISPLAY} x={startX + 3 * (cellW + gap) + 38} y={y + cellH / 2 + 8}
                   fontSize="22" fill={trend.color} fontWeight="300">
-              {trend.arrow} {trend.delta > 0 ? '+' : ''}{trend.delta}pp
+              {trend.arrow} {trend.delta > 0 ? '+' : ''}{trend.delta}
             </text>
           </g>
         );
       })}
 
-      {/* Legend */}
+      {/* Color scale — compact gradient strip with just the endpoints
+          labeled. The intermediate stops are redundant once the reader
+          sees the cell colors anchored to actual percentages above. */}
       <g>
-        <text x={72} y={770} fontSize="10" fill={P.inkSoft}
-              fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">READING THE SCALE</text>
-        <line x1={72} y1={780} x2={460} y2={780} stroke={P.rule} />
+        <text x={72} y={770} fontSize="11" fill={P.inkSoft}
+              fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">COLOR SCALE</text>
         {(() => {
           const stops = [30, 35, 40, 45, 50, 55, 60];
-          const sw = 36;
-          return stops.map((v, i) => (
-            <g key={v}>
-              <rect x={72 + i * (sw + 4)} y={792} width={sw} height={20}
-                    fill={fillForVal(v)} rx="0" />
-              <text x={72 + i * (sw + 4) + sw / 2} y={825}
-                    fontSize="11" fill={P.inkSoft}
-                    textAnchor="middle">{v}%</text>
+          const sw = 28;
+          return (
+            <g>
+              {stops.map((v, i) => (
+                <rect key={v} x={72 + i * sw} y={784} width={sw} height={16}
+                      fill={fillForVal(v)} rx="0" />
+              ))}
+              <text x={72} y={818} fontSize="11"
+                    fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+                    fontWeight="400">30%</text>
+              <text x={72 + stops.length * sw} y={818} fontSize="11"
+                    fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+                    fontWeight="400" textAnchor="end">60%</text>
             </g>
-          ));
+          );
         })()}
       </g>
     </window.ChartFrame>
