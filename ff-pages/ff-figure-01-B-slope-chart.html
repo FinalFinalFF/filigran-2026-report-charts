@@ -594,12 +594,13 @@ function F1ArtboardSlope() {
   const yFor = pct => chartBot - ((pct - yMin) / (yMax - yMin)) * (chartBot - chartTop);
 
   // Compute raw label positions (centered on endpoint), then de-overlap
-  // each column with a min gap that clears the two-line tool-label height
-  // (name on one line + % on the next).
+  // each column. minGap = 22 keeps the single-line "Tool name 45%" labels
+  // breathing room without separating them so far they detach from the
+  // slope endpoints.
   const leftRaw = tools.map(t => ({ key: t.key, y: yFor(t.planning) }));
   const rightRaw = tools.map(t => ({ key: t.key, y: yFor(t.mature) }));
-  const leftLabelY = f1DeoverlapLabels(leftRaw, 30);
-  const rightLabelY = f1DeoverlapLabels(rightRaw, 30);
+  const leftLabelY = f1DeoverlapLabels(leftRaw, 22);
+  const rightLabelY = f1DeoverlapLabels(rightRaw, 22);
 
   // Color a slope by direction. Threshold of 3pp keeps "Custom" (–2) neutral.
   // Blue = adopted on the journey; FF accent (red) = left behind. Reserve
@@ -679,41 +680,37 @@ function F1ArtboardSlope() {
         );
       })}
 
-      {/* Left-side labels: name (Inter) + % (Plus Jakarta Sans Light), right-aligned to axis. */}
+      {/* Left-side labels: single line "Tool name 45%", right-anchored to
+          the axis. Name in Inter Medium; % in Plus Jakarta Sans Light, colored
+          by slope direction. */}
       {tools.map(t => {
         const c = slopeColor(t);
         const y = leftLabelY[t.key];
         return (
-          <g key={`L-${t.key}`}>
-            <text x={leftX - 16} y={y - 1} fontSize="14"
-                  fontFamily={window.F1_FONT_BODY}
-                  fill={window.F1_PALETTE.ink} fontWeight="500"
-                  textAnchor="end">{t.short}</text>
-            <text x={leftX - 16} y={y + 16} fontSize="14"
-                  fontFamily={window.F1_FONT_DISPLAY}
-                  fill={c} fontWeight="300"
-                  style={{ letterSpacing: '-0.01em' }}
-                  textAnchor="end">{t.planning}%</text>
-          </g>
+          <text key={`L-${t.key}`} x={leftX - 16} y={y + 5}
+                fontSize="14" textAnchor="end">
+            <tspan fontFamily={window.F1_FONT_BODY}
+                   fill={window.F1_PALETTE.ink} fontWeight="500">{t.short}</tspan>
+            <tspan fontFamily={window.F1_FONT_DISPLAY}
+                   fill={c} fontWeight="300" dx="6"
+                   style={{ letterSpacing: '-0.01em' }}>{t.planning}%</tspan>
+          </text>
         );
       })}
 
-      {/* Right-side labels — same idea, left-aligned. */}
+      {/* Right-side labels — same single-line treatment, left-anchored. */}
       {tools.map(t => {
         const c = slopeColor(t);
         const y = rightLabelY[t.key];
         return (
-          <g key={`R-${t.key}`}>
-            <text x={rightX + 16} y={y - 1} fontSize="14"
-                  fontFamily={window.F1_FONT_BODY}
-                  fill={window.F1_PALETTE.ink} fontWeight="500"
-                  textAnchor="start">{t.short}</text>
-            <text x={rightX + 16} y={y + 16} fontSize="14"
-                  fontFamily={window.F1_FONT_DISPLAY}
-                  fill={c} fontWeight="300"
-                  style={{ letterSpacing: '-0.01em' }}
-                  textAnchor="start">{t.mature}%</text>
-          </g>
+          <text key={`R-${t.key}`} x={rightX + 16} y={y + 5}
+                fontSize="14" textAnchor="start">
+            <tspan fontFamily={window.F1_FONT_BODY}
+                   fill={window.F1_PALETTE.ink} fontWeight="500">{t.short}</tspan>
+            <tspan fontFamily={window.F1_FONT_DISPLAY}
+                   fill={c} fontWeight="300" dx="6"
+                   style={{ letterSpacing: '-0.01em' }}>{t.mature}%</tspan>
+          </text>
         );
       })}
 
