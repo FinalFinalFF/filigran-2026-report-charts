@@ -585,12 +585,16 @@ function F1ArtboardSlope() {
   const W = 1200, H = 900;
   const tools = window.F1_TOOLS;
 
-  // Chart geometry.
+  // Chart geometry. Slope spans the full available width; the right rail
+  // sits at x=1020 (was 980) to leave room for the longer right-side
+  // labels like "Vuln scanning 35%".
   const yMin = 22, yMax = 65;
   const chartTop = 290;
   const chartBot = 760;
-  const leftX = 380;
-  const rightX = 820;
+  const leftX = 220;
+  const rightX = 860;
+  const sideX0 = 1020;
+  const sideX1 = 1180;
   const yFor = pct => chartBot - ((pct - yMin) / (yMax - yMin)) * (chartBot - chartTop);
 
   // Compute raw label positions (centered on endpoint), then de-overlap
@@ -714,88 +718,89 @@ function F1ArtboardSlope() {
         );
       })}
 
-      {/* Side legend / story panel — FF type stack. */}
+      {/* Side legend / story panel — FF type stack. Shifted right (sideX0
+          = 1020) to clear the longer right-side slope labels. */}
       <g>
-        <text x={980} y={290} fontSize="11"
+        <text x={sideX0} y={290} fontSize="11"
               fontFamily={window.F1_FONT_MONO} fill={window.F1_PALETTE.inkSoft}
               fontWeight="500" letterSpacing="1">READING THE SLOPES</text>
-        <line x1={980} y1={300} x2={1128} y2={300}
+        <line x1={sideX0} y1={300} x2={sideX1} y2={300}
               stroke={window.F1_PALETTE.rule} />
 
-        <line x1={980} y1={324} x2={1012} y2={324}
+        <line x1={sideX0} y1={324} x2={sideX0 + 32} y2={324}
               stroke={window.F1_PALETTE.blue} strokeWidth="3"
               strokeLinecap="round" />
-        <text x={1020} y={328} fontSize="13"
+        <text x={sideX0 + 40} y={328} fontSize="13"
               fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.ink}
               fontWeight="400">Rises with maturity</text>
 
-        <line x1={980} y1={352} x2={1012} y2={352}
+        <line x1={sideX0} y1={352} x2={sideX0 + 32} y2={352}
               stroke={window.F1_PALETTE.accent} strokeWidth="3"
               strokeLinecap="round" />
-        <text x={1020} y={356} fontSize="13"
+        <text x={sideX0 + 40} y={356} fontSize="13"
               fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.ink}
               fontWeight="400">Falls with maturity</text>
 
-        <line x1={980} y1={380} x2={1012} y2={380}
+        <line x1={sideX0} y1={380} x2={sideX0 + 32} y2={380}
               stroke={window.F1_PALETTE.inkSubtle} strokeWidth="2"
               strokeLinecap="round" />
-        <text x={1020} y={384} fontSize="13"
+        <text x={sideX0 + 40} y={384} fontSize="13"
               fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.ink}
               fontWeight="400">Roughly flat (|Δ| ≤ 3pp)</text>
 
-        <text x={980} y={444} fontSize="11"
+        <text x={sideX0} y={444} fontSize="11"
               fontFamily={window.F1_FONT_MONO} fill={window.F1_PALETTE.inkSoft}
               fontWeight="500" letterSpacing="1">BIGGEST MOVES</text>
-        <line x1={980} y1={454} x2={1128} y2={454}
+        <line x1={sideX0} y1={454} x2={sideX1} y2={454}
               stroke={window.F1_PALETTE.rule} />
 
-        <text x={980} y={488} fontSize="14"
+        <text x={sideX0} y={488} fontSize="14"
               fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.ink}
               fontWeight="500">GRC</text>
-        <text x={1128} y={488} fontSize="32"
+        <text x={sideX1} y={488} fontSize="32"
               fontFamily={window.F1_FONT_DISPLAY} fill={window.F1_PALETTE.blue}
               fontWeight="300" style={{ letterSpacing: '-0.02em' }}
               textAnchor="end">+22</text>
-        <text x={980} y={508} fontSize="12"
+        <text x={sideX0} y={508} fontSize="12"
               fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.inkSoft}>
           28% → 50% adoption
         </text>
 
-        <text x={980} y={544} fontSize="14"
+        <text x={sideX0} y={544} fontSize="14"
               fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.ink}
               fontWeight="500">CSPM</text>
-        <text x={1128} y={544} fontSize="32"
+        <text x={sideX1} y={544} fontSize="32"
               fontFamily={window.F1_FONT_DISPLAY} fill={window.F1_PALETTE.blue}
               fontWeight="300" style={{ letterSpacing: '-0.02em' }}
               textAnchor="end">+21</text>
-        <text x={980} y={564} fontSize="12"
+        <text x={sideX0} y={564} fontSize="12"
               fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.inkSoft}>
           38% → 59% adoption
         </text>
 
-        <line x1={980} y1={588} x2={1128} y2={588}
+        <line x1={sideX0} y1={588} x2={sideX1} y2={588}
               stroke={window.F1_PALETTE.ruleSoft} />
 
-        <text x={980} y={622} fontSize="14"
+        <text x={sideX0} y={622} fontSize="14"
               fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.ink}
               fontWeight="500">Pen test</text>
-        <text x={1128} y={622} fontSize="32"
+        <text x={sideX1} y={622} fontSize="32"
               fontFamily={window.F1_FONT_DISPLAY} fill={window.F1_PALETTE.accent}
               fontWeight="300" style={{ letterSpacing: '-0.02em' }}
               textAnchor="end">−27</text>
-        <text x={980} y={642} fontSize="12"
+        <text x={sideX0} y={642} fontSize="12"
               fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.inkSoft}>
           62% → 35% adoption
         </text>
 
-        <text x={980} y={678} fontSize="14"
+        <text x={sideX0} y={678} fontSize="14"
               fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.ink}
               fontWeight="500">Vuln scan</text>
-        <text x={1128} y={678} fontSize="32"
+        <text x={sideX1} y={678} fontSize="32"
               fontFamily={window.F1_FONT_DISPLAY} fill={window.F1_PALETTE.accent}
               fontWeight="300" style={{ letterSpacing: '-0.02em' }}
               textAnchor="end">−15</text>
-        <text x={980} y={698} fontSize="12"
+        <text x={sideX0} y={698} fontSize="12"
               fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.inkSoft}>
           50% → 35% adoption
         </text>
