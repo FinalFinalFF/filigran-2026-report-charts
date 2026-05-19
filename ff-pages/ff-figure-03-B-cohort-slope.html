@@ -610,23 +610,27 @@ function F3ArtboardCohortSlope() {
   const P = window.FIL_PALETTE;
   const data = window.F3_CRITERIA;
 
-  // Chart geometry.
+  // Chart geometry. Slope spans the full width; right rail at sideX0=1020
+  // leaves room for the longer right-side labels ("Workflow fit 34%").
   const yMin = 18, yMax = 55;
   const chartTop = 290;
   const chartBot = 760;
-  const leftX = 380;
-  const rightX = 820;
+  const leftX = 220;
+  const rightX = 860;
+  const sideX0 = 1020;
+  const sideX1 = 1180;
   const yFor = pct => chartBot - ((pct - yMin) / (yMax - yMin)) * (chartBot - chartTop);
 
   const leftRaw = data.map(c => ({ key: c.key, y: yFor(c.planning) }));
   const rightRaw = data.map(c => ({ key: c.key, y: yFor(c.mature) }));
-  const leftLabelY = f3DeoverlapLabels(leftRaw, 28);
-  const rightLabelY = f3DeoverlapLabels(rightRaw, 28);
+  // minGap=22 keeps the single-line "Factor 22%" labels readable.
+  const leftLabelY = f3DeoverlapLabels(leftRaw, 22);
+  const rightLabelY = f3DeoverlapLabels(rightRaw, 22);
 
   const slopeColor = c => {
     const d = c.mature - c.planning;
     if (d > 3) return P.blue;
-    if (d < -3) return P.orange;
+    if (d < -3) return P.accent;
     return P.inkSubtle;
   };
 
@@ -642,16 +646,20 @@ function F3ArtboardCohortSlope() {
       width={W}
       height={H}
     >
-      {/* Column headers */}
-      <text x={leftX} y={250} fontSize="11" fill={P.inkSoft}
-            fontWeight="700" letterSpacing="2" textAnchor="middle">PLANNING CTEM</text>
-      <text x={leftX} y={268} fontSize="11" fill={P.inkSubtle}
-            fontWeight="500" textAnchor="middle">n = 40</text>
+      {/* Column headers — IBM Plex Mono, light tracking. */}
+      <text x={leftX} y={250} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+            fontWeight="500" letterSpacing="1" textAnchor="middle">PLANNING CTEM</text>
+      <text x={leftX} y={268} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.inkSubtle}
+            fontWeight="400" textAnchor="middle">n = 40</text>
 
-      <text x={rightX} y={250} fontSize="11" fill={P.blue}
-            fontWeight="700" letterSpacing="2" textAnchor="middle">MATURE CTEM</text>
-      <text x={rightX} y={268} fontSize="11" fill={P.inkSubtle}
-            fontWeight="500" textAnchor="middle">n = 252</text>
+      <text x={rightX} y={250} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.blue}
+            fontWeight="500" letterSpacing="1" textAnchor="middle">MATURE CTEM</text>
+      <text x={rightX} y={268} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.inkSubtle}
+            fontWeight="400" textAnchor="middle">n = 252</text>
 
       {/* Axis caps */}
       <line x1={leftX} y1={chartTop - 8} x2={leftX} y2={chartBot + 8}
@@ -687,80 +695,108 @@ function F3ArtboardCohortSlope() {
         );
       })}
 
-      {/* Left labels */}
+      {/* Left labels — single line "Factor 22%". Name in Inter Medium ink;
+          percentage in IBM Plex Sans Light, colored by slope direction. */}
       {data.map(c => {
         const color = slopeColor(c);
         const y = leftLabelY[c.key];
         return (
-          <g key={`L-${c.key}`}>
-            <text x={leftX - 16} y={y - 1} fontSize="13" fill={P.ink}
-                  fontWeight="600" textAnchor="end">{c.short}</text>
-            <text x={leftX - 16} y={y + 14} fontSize="12" fill={color}
-                  fontWeight="700" textAnchor="end">{c.planning}%</text>
-          </g>
+          <text key={`L-${c.key}`} x={leftX - 16} y={y + 5}
+                fontSize="14" textAnchor="end">
+            <tspan fontFamily={window.FIL_FONT_BODY}
+                   fill={P.ink} fontWeight="500">{c.short}</tspan>
+            <tspan fontFamily={window.FIL_FONT_DISPLAY}
+                   fill={color} fontWeight="300" dx="6"
+                   style={{ letterSpacing: '-0.01em' }}>{c.planning}%</tspan>
+          </text>
         );
       })}
 
-      {/* Right labels */}
+      {/* Right labels — same single-line treatment, left-anchored. */}
       {data.map(c => {
         const color = slopeColor(c);
         const y = rightLabelY[c.key];
         return (
-          <g key={`R-${c.key}`}>
-            <text x={rightX + 16} y={y - 1} fontSize="13" fill={P.ink}
-                  fontWeight="600" textAnchor="start">{c.short}</text>
-            <text x={rightX + 16} y={y + 14} fontSize="12" fill={color}
-                  fontWeight="700" textAnchor="start">{c.mature}%</text>
-          </g>
+          <text key={`R-${c.key}`} x={rightX + 16} y={y + 5}
+                fontSize="14" textAnchor="start">
+            <tspan fontFamily={window.FIL_FONT_BODY}
+                   fill={P.ink} fontWeight="500">{c.short}</tspan>
+            <tspan fontFamily={window.FIL_FONT_DISPLAY}
+                   fill={color} fontWeight="300" dx="6"
+                   style={{ letterSpacing: '-0.01em' }}>{c.mature}%</tspan>
+          </text>
         );
       })}
 
-      {/* Side panel */}
+      {/* Side panel — FF type stack. Shifted right (sideX0=1020) for the
+          stretched slope. */}
       <g>
-        <window.FrameLegendSection x={980} y={290} w={148} title="READING THE SLOPES">
-          <line x1={980} y1={324} x2={1012} y2={324}
+        <window.FrameLegendSection x={sideX0} y={290} w={160} title="READING THE SLOPES">
+          <line x1={sideX0} y1={324} x2={sideX0 + 32} y2={324}
                 stroke={P.blue} strokeWidth="3" strokeLinecap="round" />
-          <text x={1020} y={328} fontSize="12" fill={P.ink}>Matures over-index</text>
-          <line x1={980} y1={352} x2={1012} y2={352}
-                stroke={P.orange} strokeWidth="3" strokeLinecap="round" />
-          <text x={1020} y={356} fontSize="12" fill={P.ink}>Planning over-indexes</text>
-          <line x1={980} y1={380} x2={1012} y2={380}
+          <text x={sideX0 + 40} y={328} fontSize="13"
+                fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                fontWeight="400">Matures over-index</text>
+          <line x1={sideX0} y1={352} x2={sideX0 + 32} y2={352}
+                stroke={P.accent} strokeWidth="3" strokeLinecap="round" />
+          <text x={sideX0 + 40} y={356} fontSize="13"
+                fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                fontWeight="400">Planning over-indexes</text>
+          <line x1={sideX0} y1={380} x2={sideX0 + 32} y2={380}
                 stroke={P.inkSubtle} strokeWidth="2" strokeLinecap="round" />
-          <text x={1020} y={384} fontSize="12" fill={P.ink}>Roughly flat</text>
+          <text x={sideX0 + 40} y={384} fontSize="13"
+                fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                fontWeight="400">Roughly flat</text>
         </window.FrameLegendSection>
 
-        <window.FrameLegendSection x={980} y={444} w={148} title="BIGGEST DIVERGES">
-          <text x={980} y={482} fontSize="20" fill={P.blue}
-                fontWeight="800">Workflow</text>
-          <text x={1128} y={482} fontSize="20" fill={P.blue}
-                fontWeight="800" textAnchor="end">+12</text>
-          <text x={980} y={502} fontSize="11" fill={P.inkSoft}>
+        <window.FrameLegendSection x={sideX0} y={444} w={160} title="BIGGEST DIVERGES">
+          <text x={sideX0} y={488} fontSize="14"
+                fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                fontWeight="500">Workflow</text>
+          <text x={sideX1} y={488} fontSize="32"
+                fontFamily={window.FIL_FONT_DISPLAY} fill={P.blue}
+                fontWeight="300" style={{ letterSpacing: '-0.02em' }}
+                textAnchor="end">+12</text>
+          <text x={sideX0} y={508} fontSize="12"
+                fontFamily={window.FIL_FONT_BODY} fill={P.inkSoft}>
             22% → 34%
           </text>
 
-          <text x={980} y={540} fontSize="20" fill={P.blue}
-                fontWeight="800">Compliance</text>
-          <text x={1128} y={540} fontSize="20" fill={P.blue}
-                fontWeight="800" textAnchor="end">+7</text>
-          <text x={980} y={560} fontSize="11" fill={P.inkSoft}>
+          <text x={sideX0} y={544} fontSize="14"
+                fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                fontWeight="500">Compliance</text>
+          <text x={sideX1} y={544} fontSize="32"
+                fontFamily={window.FIL_FONT_DISPLAY} fill={P.blue}
+                fontWeight="300" style={{ letterSpacing: '-0.02em' }}
+                textAnchor="end">+7</text>
+          <text x={sideX0} y={564} fontSize="12"
+                fontFamily={window.FIL_FONT_BODY} fill={P.inkSoft}>
             28% → 35%
           </text>
 
-          <line x1={980} y1={584} x2={1128} y2={584} stroke={P.ruleSoft} />
+          <line x1={sideX0} y1={588} x2={sideX1} y2={588} stroke={P.ruleSoft} />
 
-          <text x={980} y={614} fontSize="20" fill={P.orange}
-                fontWeight="800">Privacy</text>
-          <text x={1128} y={614} fontSize="20" fill={P.orange}
-                fontWeight="800" textAnchor="end">−16</text>
-          <text x={980} y={634} fontSize="11" fill={P.inkSoft}>
+          <text x={sideX0} y={622} fontSize="14"
+                fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                fontWeight="500">Privacy</text>
+          <text x={sideX1} y={622} fontSize="32"
+                fontFamily={window.FIL_FONT_DISPLAY} fill={P.accent}
+                fontWeight="300" style={{ letterSpacing: '-0.02em' }}
+                textAnchor="end">−16</text>
+          <text x={sideX0} y={642} fontSize="12"
+                fontFamily={window.FIL_FONT_BODY} fill={P.inkSoft}>
             50% → 34%
           </text>
 
-          <text x={980} y={672} fontSize="20" fill={P.orange}
-                fontWeight="800">Cost</text>
-          <text x={1128} y={672} fontSize="20" fill={P.orange}
-                fontWeight="800" textAnchor="end">−10</text>
-          <text x={980} y={692} fontSize="11" fill={P.inkSoft}>
+          <text x={sideX0} y={678} fontSize="14"
+                fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                fontWeight="500">Cost</text>
+          <text x={sideX1} y={678} fontSize="32"
+                fontFamily={window.FIL_FONT_DISPLAY} fill={P.accent}
+                fontWeight="300" style={{ letterSpacing: '-0.02em' }}
+                textAnchor="end">−10</text>
+          <text x={sideX0} y={698} fontSize="12"
+                fontFamily={window.FIL_FONT_BODY} fill={P.inkSoft}>
             40% → 30%
           </text>
         </window.FrameLegendSection>
