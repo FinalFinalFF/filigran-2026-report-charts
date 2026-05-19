@@ -613,8 +613,11 @@ function F2ArtboardQuadrant() {
   // Plot rect. Right edge stops before the x=952 legend rail; bottom edge
   // stops well above the y≈738 "PAUSE ON THIS" callout so axis labels don't
   // crash into the callout body or the right-rail "+12pp" outlier block.
+  // y0 nudged up and y1 down to give the dots vertical breathing room — the
+  // Skills/expertise dot at gap=+12 was crashing into the upper-right
+  // quadrant label otherwise.
   const x0 = 200, x1 = 920;
-  const y0 = 270, y1 = 660;
+  const y0 = 230, y1 = 680;
 
   // X domain: 30 → 55 (% citing). Y domain: −15 → +15 pp gap.
   const xDomain = [30, 55];
@@ -630,19 +633,25 @@ function F2ArtboardQuadrant() {
   // Reference lines at mean cite-rate and at gap = 0.
   const meanX = items.reduce((s, b) => s + b.total, 0) / items.length;
 
-  // Color: barriers whose gap > +3 (worse for laggards) get orange; gap < −3
-  // (worse for leaders) get blue; flat get neutral.
-  const dotColor = gap => gap > 3 ? P.orange : gap < -3 ? P.blue : P.inkSubtle;
+  // Color: barriers whose gap > +3 (worse for laggards) get FF accent;
+  // gap < −3 (worse for leaders) get Filigran blue; flat get inkSoft so
+  // the in-circle white % has enough contrast.
+  const dotColor = gap => gap > 3 ? P.accent : gap < -3 ? P.blue : P.inkSoft;
 
-  // Manual label-offset overrides where automatic placement crowds.
-  const labelOffset = {
-    disrupt:  { dx: 14, dy: 5,  anchor: 'start' },
-    manual:   { dx: 14, dy: 5,  anchor: 'start' },
-    skills:   { dx: 14, dy: 5,  anchor: 'start' },
-    integ:    { dx: -14, dy: 5, anchor: 'end' },
-    time:     { dx: 14, dy: 5,  anchor: 'start' },
-    priority: { dx: -14, dy: 5, anchor: 'end' },
-    tools:    { dx: 14, dy: 5,  anchor: 'start' },
+  // Bigger dots so the % can live inside; emphasis is rendered as a slightly
+  // larger circle on the editorial outlier (Skills/expertise).
+  const dotR = 26, dotRBig = 30;
+
+  // Label placement — name only, sat alongside the circle. `side` picks the
+  // gutter so labels don't overlap dots or the axes.
+  const labelSide = {
+    disrupt:  'right',
+    manual:   'right',
+    skills:   'right',
+    integ:    'left',
+    time:     'right',
+    priority: 'left',
+    tools:    'right',
   };
 
   return (
@@ -657,7 +666,7 @@ function F2ArtboardQuadrant() {
     >
       {/* Quadrant background tint — upper-right is "act first" */}
       <rect x={xFor(meanX)} y={y0} width={x1 - xFor(meanX)} height={yFor(0) - y0}
-            fill={P.orangeTint} opacity="0.6" />
+            fill={P.accentTint} opacity="0.6" />
 
       {/* Axes */}
       <line x1={x0} y1={y1} x2={x1} y2={y1} stroke={P.inkSubtle} strokeWidth="1" />
@@ -669,105 +678,116 @@ function F2ArtboardQuadrant() {
       <line x1={x0} y1={yFor(0)} x2={x1} y2={yFor(0)}
             stroke={P.rule} strokeDasharray="3 5" />
 
-      {/* Axis ticks */}
+      {/* Axis ticks — IBM Plex Mono for the values */}
       {[30, 35, 40, 45, 50, 55].map(t => (
         <g key={`xt-${t}`}>
           <line x1={xFor(t)} y1={y1} x2={xFor(t)} y2={y1 + 5}
                 stroke={P.inkSubtle} />
-          <text x={xFor(t)} y={y1 + 22} fontSize="11" fill={P.inkSoft}
-                textAnchor="middle">{t}%</text>
+          <text x={xFor(t)} y={y1 + 22} fontSize="11"
+                fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+                fontWeight="400" textAnchor="middle">{t}%</text>
         </g>
       ))}
       {[-15, -10, -5, 0, 5, 10, 15].map(t => (
         <g key={`yt-${t}`}>
           <line x1={x0 - 5} y1={yFor(t)} x2={x0} y2={yFor(t)}
                 stroke={P.inkSubtle} />
-          <text x={x0 - 10} y={yFor(t) + 4} fontSize="11" fill={P.inkSoft}
-                textAnchor="end">{t > 0 ? '+' : ''}{t}pp</text>
+          <text x={x0 - 10} y={yFor(t) + 4} fontSize="11"
+                fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+                fontWeight="400" textAnchor="end">{t > 0 ? '+' : ''}{t}pp</text>
         </g>
       ))}
 
-      {/* Axis labels */}
-      <text x={(x0 + x1) / 2} y={y1 + 52} fontSize="11" fill={P.inkSoft}
-            fontWeight="600" letterSpacing="2" textAnchor="middle">
+      {/* Axis labels — IBM Plex Mono, lighter weight, tighter tracking. */}
+      <text x={(x0 + x1) / 2} y={y1 + 52} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+            fontWeight="500" letterSpacing="1" textAnchor="middle">
         FREQUENCY · % OF ORGS CITING IT
       </text>
-      <text x={x0 - 80} y={(y0 + y1) / 2} fontSize="11" fill={P.inkSoft}
-            fontWeight="600" letterSpacing="2" textAnchor="middle"
+      <text x={x0 - 80} y={(y0 + y1) / 2} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+            fontWeight="500" letterSpacing="1" textAnchor="middle"
             transform={`rotate(-90, ${x0 - 80}, ${(y0 + y1) / 2})`}>
         COHORT GAP · LAGGARDS − LEADERS (pp)
       </text>
 
-      {/* Quadrant labels — right-anchored at the plot edge so they sit in the
-          top-right corner instead of crashing into the Skills/expertise dot
-          label that lives in the middle of this quadrant. */}
-      <text x={x1 - 8} y={y0 + 18} fontSize="10" fill={P.orange}
-            fontWeight="700" letterSpacing="2" textAnchor="end">ACT FIRST →</text>
-      <text x={x1 - 8} y={y0 + 36} fontSize="11" fill={P.ink}
-            fontWeight="500" textAnchor="end">Common · worse for laggards</text>
+      {/* Quadrant labels — eyebrows only. The wordy second-line descriptions
+          were colliding with the Skills/expertise dot label in the upper-right
+          quadrant. The eyebrow + colored quadrant tint + right-rail legend
+          convey the encoding without needing inline descriptors. */}
+      <text x={x1 - 8} y={y0 + 18} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.accent}
+            fontWeight="500" letterSpacing="1" textAnchor="end">ACT FIRST →</text>
 
-      <text x={xFor(meanX) - 16} y={y0 + 18} fontSize="10" fill={P.inkSoft}
-            fontWeight="700" letterSpacing="2" textAnchor="end">UNIVERSAL TAX</text>
-      <text x={xFor(meanX) - 16} y={y0 + 36} fontSize="11" fill={P.ink}
-            fontWeight="500" textAnchor="end">Common · all cohorts equal</text>
+      <text x={xFor(meanX) - 16} y={y0 + 18} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+            fontWeight="500" letterSpacing="1" textAnchor="end">UNIVERSAL TAX</text>
 
-      <text x={xFor(meanX) + 16} y={y1 - 12} fontSize="10" fill={P.blue}
-            fontWeight="700" letterSpacing="2">LEADERS' OWN PROBLEM</text>
-      <text x={xFor(meanX) + 16} y={y1 - 28} fontSize="11" fill={P.ink}
-            fontWeight="500">Common · worse for leaders</text>
+      <text x={xFor(meanX) + 16} y={y1 - 14} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.blue}
+            fontWeight="500" letterSpacing="1">LEADERS' OWN PROBLEM</text>
 
-      <text x={xFor(meanX) - 16} y={y1 - 12} fontSize="10" fill={P.inkSubtle}
-            fontWeight="700" letterSpacing="2" textAnchor="end">EDGE CASES</text>
-      <text x={xFor(meanX) - 16} y={y1 - 28} fontSize="11" fill={P.ink}
-            fontWeight="500" textAnchor="end">Rare · cohort difference small</text>
+      <text x={xFor(meanX) - 16} y={y1 - 14} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.inkSubtle}
+            fontWeight="500" letterSpacing="1" textAnchor="end">EDGE CASES</text>
 
-      {/* Dots */}
+      {/* Dots — big enough to host the % inside. Tool name sits in the
+          adjacent gutter; secondary "%·+12pp" label removed (the % is now
+          in the circle and the cohort-gap encoding is the y-position). */}
       {items.map(b => {
         const cx = xFor(b.total), cy = yFor(b.gap);
         const c = dotColor(b.gap);
-        const offset = labelOffset[b.key] || { dx: 12, dy: 5, anchor: 'start' };
         const emphasis = b.key === 'skills';
+        const r = emphasis ? dotRBig : dotR;
+        const side = labelSide[b.key] || 'right';
+        const lx = side === 'right' ? cx + r + 10 : cx - r - 10;
+        const anchor = side === 'right' ? 'start' : 'end';
         return (
           <g key={b.key}>
-            <circle cx={cx} cy={cy} r={emphasis ? 14 : 9} fill={c}
-                    opacity={emphasis ? 1 : 0.85}
-                    stroke={emphasis ? P.paper : 'none'} strokeWidth="3" />
-            <text x={cx + offset.dx} y={cy + offset.dy}
-                  fontSize={emphasis ? 14 : 12} fill={P.ink}
-                  fontWeight={emphasis ? 700 : 600}
-                  textAnchor={offset.anchor}>{b.short}</text>
-            <text x={cx + offset.dx} y={cy + offset.dy + 16}
-                  fontSize="11" fill={c} fontWeight="600"
-                  textAnchor={offset.anchor}>
-              {b.total}% · {b.gap > 0 ? '+' : ''}{b.gap}pp
-            </text>
+            <circle cx={cx} cy={cy} r={r} fill={c} />
+            <text x={cx} y={cy} fontSize={emphasis ? 16 : 14}
+                  fontFamily={window.FIL_FONT_DISPLAY} fill={P.paper}
+                  fontWeight="300"
+                  style={{ letterSpacing: '-0.02em' }}
+                  textAnchor="middle" dominantBaseline="central">{b.total}%</text>
+            <text x={lx} y={cy + 5}
+                  fontSize={emphasis ? 15 : 14}
+                  fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                  fontWeight={emphasis ? 600 : 500}
+                  textAnchor={anchor}>{b.short}</text>
           </g>
         );
       })}
 
-      {/* Right-side mini-legend */}
+      {/* Right-side mini-legend — FF type stack. */}
       <g>
         <window.FrameLegendSection x={W - 248} y={250} w={176} title="READING THIS">
-          <text x={W - 248} y={278} fontSize="12" fill={P.ink} fontWeight="500">
+          <text x={W - 248} y={278} fontSize="13"
+                fontFamily={window.FIL_FONT_BODY} fill={P.ink} fontWeight="400">
             <tspan x={W - 248} dy="0">Position = how common</tspan>
-            <tspan x={W - 248} dy="16">and how cohort-skewed</tspan>
-            <tspan x={W - 248} dy="16">each barrier is.</tspan>
+            <tspan x={W - 248} dy="17">and how cohort-skewed</tspan>
+            <tspan x={W - 248} dy="17">each barrier is.</tspan>
           </text>
-          <circle cx={W - 240} cy={342} r="6" fill={P.orange} />
-          <text x={W - 226} y={346} fontSize="12" fill={P.ink}>Worse for laggards</text>
-          <circle cx={W - 240} cy={368} r="6" fill={P.blue} />
-          <text x={W - 226} y={372} fontSize="12" fill={P.ink}>Worse for leaders</text>
-          <circle cx={W - 240} cy={394} r="6" fill={P.inkSubtle} />
-          <text x={W - 226} y={398} fontSize="12" fill={P.ink}>Roughly equal</text>
+          <circle cx={W - 240} cy={350} r="7" fill={P.accent} />
+          <text x={W - 224} y={354} fontSize="13"
+                fontFamily={window.FIL_FONT_BODY} fill={P.ink} fontWeight="400">Worse for laggards</text>
+          <circle cx={W - 240} cy={376} r="7" fill={P.blue} />
+          <text x={W - 224} y={380} fontSize="13"
+                fontFamily={window.FIL_FONT_BODY} fill={P.ink} fontWeight="400">Worse for leaders</text>
+          <circle cx={W - 240} cy={402} r="7" fill={P.inkSoft} />
+          <text x={W - 224} y={406} fontSize="13"
+                fontFamily={window.FIL_FONT_BODY} fill={P.ink} fontWeight="400">Roughly equal</text>
         </window.FrameLegendSection>
 
         <window.FrameLegendSection x={W - 248} y={444} w={176} title="THE OUTLIER">
-          <text x={W - 248} y={478} fontSize="36" fill={P.orange}
-                fontWeight="800">+12pp</text>
-          <text x={W - 248} y={502} fontSize="11" fill={P.inkSoft}>
+          <text x={W - 248} y={490} fontSize="44"
+                fontFamily={window.FIL_FONT_DISPLAY} fill={P.accent}
+                fontWeight="300" style={{ letterSpacing: '-0.02em' }}>+12pp</text>
+          <text x={W - 248} y={516} fontSize="12"
+                fontFamily={window.FIL_FONT_BODY} fill={P.inkSoft} fontWeight="400">
             <tspan x={W - 248} dy="0">Skills/expertise gap between</tspan>
-            <tspan x={W - 248} dy="14">fully-consolidated and least-</tspan>
-            <tspan x={W - 248} dy="14">consolidated cohorts.</tspan>
+            <tspan x={W - 248} dy="15">fully-consolidated and least-</tspan>
+            <tspan x={W - 248} dy="15">consolidated cohorts.</tspan>
           </text>
         </window.FrameLegendSection>
       </g>
