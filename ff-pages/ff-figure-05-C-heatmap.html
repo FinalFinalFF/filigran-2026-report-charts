@@ -384,7 +384,7 @@ a { color: inherit; }
 
     <aside class="ff-report" aria-label="Where this chart maps in the whitepaper"><div class="ff-report__row"><span class="ff-report__label">Report section</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">The need for structured cyber risk reduction</a></span></div><div class="ff-report__row"><span class="ff-report__label">Whitepaper figure</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">Figure 5</a></span><span class="ff-report__fit ff-report__fit--clean">Maps cleanly</span></div><p class="ff-report__note">Same Q23 data as whitepaper Figure 5, with consolidated-view cohort split layered on.</p></aside>
 
-    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root"></div></div>
+    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 609"></div></div>
 
     <div class="ff-callout">
       <div class="ff-callout__bar" aria-hidden="true"></div>
@@ -414,7 +414,7 @@ a { color: inherit; }
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-  <script>window.FF_CHROMELESS = true;</script>
+  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 228 1200 609";</script>
 
   <script type="text/babel" data-presets="react">
 // shared/frame.jsx
@@ -470,10 +470,14 @@ function ChartFrame({
   // FF_CHROMELESS short-circuit: when the FinalFinal page wrapper has
   // already rendered eyebrow/headline/subtitle/caption/callout/source as
   // HTML, ChartFrame should emit only the chart marks inside a bare SVG.
+  // window.FF_VIEWBOX (set per-page by the generator) overrides the
+  // default 0 0 width height viewBox so the SVG can crop empty top/bottom
+  // bands without touching the artboard JSX.
   if (typeof window !== "undefined" && window.FF_CHROMELESS) {
+    const _vb = window.FF_VIEWBOX || `0 0 ${width} ${height}`;
     return (
       <svg xmlns="http://www.w3.org/2000/svg"
-           viewBox={`0 0 ${width} ${height}`}
+           viewBox={_vb}
            width="100%" height="100%"
            preserveAspectRatio="xMidYMid meet"
            style={{ display: "block", background: "#fff", fontFamily: "Inter, system-ui, sans-serif" }}>
