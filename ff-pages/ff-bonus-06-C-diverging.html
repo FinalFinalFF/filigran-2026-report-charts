@@ -673,10 +673,15 @@ function B6ArtboardDiverging() {
 
         return (
           <g key={p.key}>
-            {/* Topic name above the row, centered on the spine */}
-            <text x={spineX} y={yc - 16} fontSize="14"
+            {/* Topic + gap on one line above the row, centered on the spine.
+                Topic in ink; gap value as a colored tspan after it. Keeps
+                everything above the bars (which stay visually clean). */}
+            <text x={spineX} y={yc - 14} fontSize="14"
                   fontFamily={window.FIL_FONT_BODY} fill={P.ink}
-                  fontWeight="500" textAnchor="middle">{topicFor[p.key] || p.key}</text>
+                  fontWeight="500" textAnchor="middle">
+              <tspan>{topicFor[p.key] || p.key}</tspan>
+              <tspan dx="14" fill={P.accent} fontWeight="500">−{gap}pp gap</tspan>
+            </text>
 
             {/* Aspiration bar — extends left from spine */}
             <rect x={spineX - sayW} y={yc} width={sayW} height={barH}
@@ -692,16 +697,6 @@ function B6ArtboardDiverging() {
             <text x={spineX + doW + 12} y={yc + 21} fontSize="22"
                   fontFamily={window.FIL_FONT_DISPLAY} fill={P.blue}
                   fontWeight="300" style={{ letterSpacing: '-0.02em' }}>{p.do_.pct}%</text>
-
-            {/* Gap label — sits ABOVE the spine (in the topic-name band) to
-                avoid overlapping the bars themselves. Aligned right beneath
-                the topic name. */}
-            <text x={spineX} y={yc + 21} fontSize="13"
-                  fontFamily={window.FIL_FONT_MONO} fill={P.paper}
-                  fontWeight="500" textAnchor="middle"
-                  style={{ paintOrder: 'stroke', stroke: P.accent, strokeWidth: 12, strokeLinejoin: 'round' }}>
-              −{gap}pp
-            </text>
 
             {/* Survey statements — short, under the bars on each side */}
             {sayLines.map((ln, li) => (
