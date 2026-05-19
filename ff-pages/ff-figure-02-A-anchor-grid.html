@@ -432,14 +432,26 @@ const FIL_PALETTE = {
   blueMid:    '#3B82F6',
   blueLight:  '#BFDBFE',
   blueTint:   '#EFF4FF',
-  orange:     '#F26C2C',  // "Pause on this" accent — used sparingly
-  orangeTint: '#FEEFE4',
+  // FinalFinal accent — used sparingly for editorial emphasis. `orange` is
+  // kept as an alias so older artboard refs keep working unchanged.
+  accent:     '#DA3832',
+  accentTint: '#FEEBEA',
+  orange:     '#DA3832',
+  orangeTint: '#FEEBEA',
   good:       '#0E9F6E',  // secondary accent (leader indicator)
   goodTint:   '#D1FAE5',
   paper:      '#FFFFFF',
 };
 
-const FIL_FONT = `'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+// FF type stack — three roles, applied selectively per text element.
+//   DISPLAY  — Plus Jakarta Sans Light. Big numerical headlines (the "97%",
+//              the "+12pp" callouts). FF signature.
+//   BODY     — Inter. Standard chart labels.
+//   MONO     — IBM Plex Mono. Eyebrows, tick labels, mono captions.
+const FIL_FONT         = `'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+const FIL_FONT_BODY    = FIL_FONT;
+const FIL_FONT_DISPLAY = `'Plus Jakarta Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+const FIL_FONT_MONO    = `'IBM Plex Mono', 'Courier New', monospace`;
 
 // ChartFrame — every artboard wraps its chart in this. Eyebrow → headline →
 // subtitle → caption sit above; an orange "PAUSE ON THIS" callout and a
@@ -535,7 +547,10 @@ function FrameLegendSection({ x, y, w = 208, title, children }) {
   );
 }
 
-Object.assign(window, { FIL_PALETTE, FIL_FONT, ChartFrame, FrameLegendSection });
+Object.assign(window, {
+  FIL_PALETTE, FIL_FONT, FIL_FONT_BODY, FIL_FONT_DISPLAY, FIL_FONT_MONO,
+  ChartFrame, FrameLegendSection,
+});
 
   </script>
   <script type="text/babel" data-presets="react">
@@ -595,36 +610,52 @@ function F2ArtboardAnchorGrid() {
   const bigX = 96, bigY = 412;
   const bigSize = 200;
 
-  // Right-hand column block.
+  // Right-hand column block. Bars are scaled honestly: the soft column
+  // background represents 100%, the filled bar shows the actual %. A 46%
+  // bar now visually fills 46% of the column, not 92%.
   const colX = 560, colW = 560;
   const colTop = 248;
   const rowH = 34, rowGap = 14;
-  const maxPct = 50;  // every bar fits without dominating the column
+  const maxPct = 100;
 
   // Render a single grouped column of barriers.
   const renderGroup = (items, y0, color, colorSoft, header, sub) => {
     let y = y0;
     const out = [];
     out.push(
-      <text key={`h-${header}`} x={colX} y={y} fontSize="11" fill={color}
-            fontWeight="700" letterSpacing="2">{header}</text>,
+      <text key={`h-${header}`} x={colX} y={y} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO || "'IBM Plex Mono', monospace"}
+            fill={color} fontWeight="500" letterSpacing="1">{header}</text>,
       <text key={`s-${header}`} x={colW + colX} y={y} fontSize="11"
-            fill={P.inkSubtle} fontWeight="500" textAnchor="end">{sub}</text>,
+            fontFamily={window.FIL_FONT_MONO || "'IBM Plex Mono', monospace"}
+            fill={P.inkSubtle} fontWeight="400" textAnchor="end">{sub}</text>,
       <line key={`r-${header}`} x1={colX} y1={y + 8} x2={colX + colW} y2={y + 8}
             stroke={colorSoft} strokeWidth="1" />
     );
     y += 30;
     items.forEach((b, i) => {
       const w = colW * (b.total / maxPct);
+      // White-on-color label sits inside the filled bar — only if the bar is
+      // wide enough to host the text. Otherwise it sits to the right of the
+      // bar end in ink for legibility.
+      const labelInside = w >= 110;
       out.push(
         <rect key={`bg-${b.key}`} x={colX} y={y} width={colW} height={rowH}
-              fill={colorSoft} rx="4" />,
+              fill={colorSoft} rx="0" />,
         <rect key={`fg-${b.key}`} x={colX} y={y} width={w} height={rowH}
-              fill={color} rx="4" />,
-        <text key={`lb-${b.key}`} x={colX + 14} y={y + 22} fontSize="13"
-              fill={P.paper} fontWeight="600">{b.short}</text>,
-        <text key={`pc-${b.key}`} x={colX + colW - 12} y={y + 22} fontSize="14"
-              fill={P.ink} fontWeight="800" textAnchor="end">{b.total}%</text>
+              fill={color} rx="0" />,
+        labelInside
+          ? <text key={`lb-${b.key}`} x={colX + 14} y={y + 22} fontSize="13"
+                  fontFamily={window.FIL_FONT_BODY || "'Inter', sans-serif"}
+                  fill={P.paper} fontWeight="500">{b.short}</text>
+          : <text key={`lb-${b.key}`} x={colX + w + 12} y={y + 22} fontSize="13"
+                  fontFamily={window.FIL_FONT_BODY || "'Inter', sans-serif"}
+                  fill={P.ink} fontWeight="500">{b.short}</text>,
+        <text key={`pc-${b.key}`} x={colX + colW - 12} y={y + 24} fontSize="20"
+              fontFamily={window.FIL_FONT_DISPLAY || "'Plus Jakarta Sans', sans-serif"}
+              fill={P.ink} fontWeight="300"
+              style={{ letterSpacing: '-0.02em' }}
+              textAnchor="end">{b.total}%</text>
       );
       y += rowH + rowGap;
     });
@@ -646,15 +677,21 @@ function F2ArtboardAnchorGrid() {
       width={W}
       height={H}
     >
-      {/* Big 97% */}
-      <text x={bigX} y={bigY} fontSize={bigSize} fill={P.blue}
-            fontWeight="800" style={{ letterSpacing: '-0.04em' }}>97</text>
-      <text x={bigX + 232} y={bigY - 96} fontSize="84" fill={P.blue}
-            fontWeight="800">%</text>
-      <text x={bigX} y={bigY + 72} fontSize="14" fill={P.inkSoft}>
+      {/* Big 97% — Plus Jakarta Sans Light, the FF display signature. */}
+      <text x={bigX} y={bigY} fontSize={bigSize}
+            fontFamily={window.FIL_FONT_DISPLAY} fill={P.blue}
+            fontWeight="300" style={{ letterSpacing: '-0.04em' }}>97</text>
+      <text x={bigX + 244} y={bigY - 96} fontSize="84"
+            fontFamily={window.FIL_FONT_DISPLAY} fill={P.blue}
+            fontWeight="300" style={{ letterSpacing: '-0.03em' }}>%</text>
+      <text x={bigX} y={bigY + 72} fontSize="15"
+            fontFamily={window.FIL_FONT_BODY} fill={P.inkSoft}
+            fontWeight="400">
         of organizations report difficulty
       </text>
-      <text x={bigX} y={bigY + 92} fontSize="14" fill={P.inkSoft}>
+      <text x={bigX} y={bigY + 94} fontSize="15"
+            fontFamily={window.FIL_FONT_BODY} fill={P.inkSoft}
+            fontWeight="400">
         validating exploitability
       </text>
 
@@ -667,10 +704,12 @@ function F2ArtboardAnchorGrid() {
       {groupA.elems}
       {groupB.elems}
 
-      {/* Lower-left supporting block: the "97% face challenges" -> split */}
+      {/* Lower-left supporting block: how the 97% splits between op drag and
+          capability gap. */}
       <g>
-        <text x={bigX} y={bigY + 160} fontSize="10" fill={P.inkSoft}
-              fontWeight="700" letterSpacing="2">HOW THE 97% BREAKS DOWN</text>
+        <text x={bigX} y={bigY + 160} fontSize="11"
+              fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+              fontWeight="500" letterSpacing="1">HOW THE 97% BREAKS DOWN</text>
         <line x1={bigX} y1={bigY + 170} x2={bigX + 360} y2={bigY + 170}
               stroke={P.rule} />
         {/* Stacked bar showing the average response weight across the two buckets */}
@@ -678,17 +717,19 @@ function F2ArtboardAnchorGrid() {
           const opAvg = window.F2_OP.reduce((s, b) => s + b.total, 0) / window.F2_OP.length;
           const capAvg = window.F2_CAP.reduce((s, b) => s + b.total, 0) / window.F2_CAP.length;
           const total = opAvg + capAvg;
-          const w = 360, h = 26;
+          const w = 360, h = 28;
           const opW = w * opAvg / total;
           const capW = w * capAvg / total;
           return (
             <g>
-              <rect x={bigX} y={bigY + 188} width={opW} height={h} fill={P.blue} rx="4" />
-              <rect x={bigX + opW} y={bigY + 188} width={capW} height={h} fill={P.inkSoft} rx="4" />
-              <text x={bigX + opW / 2} y={bigY + 206} fontSize="11"
-                    fill={P.paper} fontWeight="700" textAnchor="middle">Op drag avg {opAvg.toFixed(0)}%</text>
-              <text x={bigX + opW + capW / 2} y={bigY + 206} fontSize="11"
-                    fill={P.paper} fontWeight="700" textAnchor="middle">Capability avg {capAvg.toFixed(0)}%</text>
+              <rect x={bigX} y={bigY + 188} width={opW} height={h} fill={P.blue} rx="0" />
+              <rect x={bigX + opW} y={bigY + 188} width={capW} height={h} fill={P.inkSoft} rx="0" />
+              <text x={bigX + opW / 2} y={bigY + 207} fontSize="12"
+                    fontFamily={window.FIL_FONT_BODY} fill={P.paper}
+                    fontWeight="500" textAnchor="middle">Op drag · avg {opAvg.toFixed(0)}%</text>
+              <text x={bigX + opW + capW / 2} y={bigY + 207} fontSize="12"
+                    fontFamily={window.FIL_FONT_BODY} fill={P.paper}
+                    fontWeight="500" textAnchor="middle">Capability · avg {capAvg.toFixed(0)}%</text>
             </g>
           );
         })()}
