@@ -384,7 +384,7 @@ a { color: inherit; }
 
     <aside class="ff-report" aria-label="Where this chart maps in the whitepaper"><div class="ff-report__row"><span class="ff-report__label">Report section</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">The need for structured cyber risk reduction</a></span></div><div class="ff-report__row"><span class="ff-report__label">Whitepaper figure</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">Figure 5</a></span><span class="ff-report__fit ff-report__fit--clean">Maps cleanly</span></div><p class="ff-report__note">Same Q23 data as whitepaper Figure 5, re-arranged into a Push/Pull diverging layout.</p></aside>
 
-    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 366"></div></div>
+    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 526"></div></div>
 
     <div class="ff-callout">
       <div class="ff-callout__bar" aria-hidden="true"></div>
@@ -414,7 +414,7 @@ a { color: inherit; }
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 234 1200 366";</script>
+  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 234 1200 526";</script>
 
   <script type="text/babel" data-presets="react">
 // shared/frame.jsx
@@ -623,13 +623,15 @@ function F5ArtboardPushPull() {
                        .sort((a, b) => b.total - a.total);
   const center = drivers.filter(d => d.force === 'outcome');
 
-  // Geometry.
+  // Geometry. Bigger rowH gives breathing room (was 60 — bar + name + long
+  // duplicate label collided). Reduced ppToPx so the longest bar (Attack
+  // frequency at 54%) keeps its % label inside the chart.
   const axisX = W / 2;
-  const ppToPx = 11;
-  const rowH = 60;
+  const ppToPx = 8;
+  const rowH = 100;
   const top = 280;
   const maxLen = 60 * ppToPx;
-  const barH = 26;
+  const barH = 32;
 
   // The center axis stack
   const centerTop = top + Math.max(lefts.length, rights.length) * rowH + 56;
@@ -677,39 +679,41 @@ function F5ArtboardPushPull() {
         </g>
       ))}
 
-      {/* Left rows */}
+      {/* Left rows — short label above the bar, % inside the bar at its
+          far (outer) end so it never goes off-screen for longer bars. */}
       {lefts.map((d, i) => {
         const yc = top + i * rowH + rowH / 2;
         const w = d.total * ppToPx;
         return (
           <g key={d.key}>
-            <text fontFamily={window.FIL_FONT_DISPLAY} x={axisX - w - 12} y={yc + 5} fontSize="22" fill={P.blueMid}
-                  fontWeight="300" textAnchor="end">{d.total}%</text>
+            <text x={axisX - 12} y={yc - barH / 2 - 10} fontSize="15"
+                  fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                  fontWeight="500" textAnchor="end">{d.short}</text>
             <rect x={axisX - w} y={yc - barH / 2} width={w} height={barH}
                   fill={P.blueMid} rx="0" />
-            <text x={axisX - 12} y={yc - 18} fontSize="11" fill={P.ink}
-                  fontWeight="700" textAnchor="end">{d.short}</text>
-            <text x={axisX - 12} y={yc + 22} fontSize="11" fill={P.inkSoft}
-                  textAnchor="end">{d.label.length > 56 ? d.label.slice(0, 54) + '…' : d.label}</text>
+            <text x={axisX - w + 12} y={yc + 7} fontSize="18"
+                  fontFamily={window.FIL_FONT_DISPLAY} fill={P.paper}
+                  fontWeight="300"
+                  style={{ letterSpacing: '-0.02em' }}>{d.total}%</text>
           </g>
         );
       })}
 
-      {/* Right rows */}
+      {/* Right rows — same treatment, mirrored. */}
       {rights.map((d, i) => {
         const yc = top + i * rowH + rowH / 2;
         const w = d.total * ppToPx;
         return (
           <g key={d.key}>
-            <text fontFamily={window.FIL_FONT_DISPLAY} x={axisX + w + 12} y={yc + 5} fontSize="22" fill={P.blue}
-                  fontWeight="300">{d.total}%</text>
+            <text x={axisX + 12} y={yc - barH / 2 - 10} fontSize="15"
+                  fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                  fontWeight="500">{d.short}</text>
             <rect x={axisX} y={yc - barH / 2} width={w} height={barH}
                   fill={P.blue} rx="0" />
-            <text x={axisX + 12} y={yc - 18} fontSize="11" fill={P.ink}
-                  fontWeight="700">{d.short}</text>
-            <text x={axisX + 12} y={yc + 22} fontSize="11" fill={P.inkSoft}>
-              {d.label.length > 56 ? d.label.slice(0, 54) + '…' : d.label}
-            </text>
+            <text x={axisX + w - 12} y={yc + 7} fontSize="18"
+                  fontFamily={window.FIL_FONT_DISPLAY} fill={P.paper}
+                  fontWeight="300" textAnchor="end"
+                  style={{ letterSpacing: '-0.02em' }}>{d.total}%</text>
           </g>
         );
       })}
@@ -726,12 +730,16 @@ function F5ArtboardPushPull() {
         const w = d.total * ppToPx;
         return (
           <g key={d.key}>
+            <text x={axisX} y={yc - barH / 2 - 10} fontSize="15"
+                  fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                  fontWeight="500" textAnchor="middle">{d.short}</text>
             <rect x={axisX - w / 2} y={yc - barH / 2} width={w} height={barH}
                   fill={P.good} rx="0" />
-            <text x={axisX} y={yc + 7} fontSize="16" fill={P.paper}
-                  fontWeight="600" textAnchor="middle">{d.total}%</text>
-            <text x={axisX} y={yc + 32} fontSize="13" fill={P.ink}
-                  fontWeight="700" textAnchor="middle">{d.short}</text>
+            <text x={axisX} y={yc + 8} fontSize="18"
+                  fontFamily={window.FIL_FONT_DISPLAY} fill={P.paper}
+                  fontWeight="300"
+                  style={{ letterSpacing: '-0.02em' }}
+                  textAnchor="middle">{d.total}%</text>
           </g>
         );
       })}
