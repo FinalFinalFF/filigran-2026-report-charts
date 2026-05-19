@@ -610,14 +610,12 @@ function F2ArtboardQuadrant() {
   const W = 1200, H = 900;
   const P = window.FIL_PALETTE;
 
-  // Plot rect. Right edge stops before the x=952 legend rail; bottom edge
-  // stops well above the y≈738 "PAUSE ON THIS" callout so axis labels don't
-  // crash into the callout body or the right-rail "+12pp" outlier block.
-  // y0 nudged up and y1 down to give the dots vertical breathing room — the
-  // Skills/expertise dot at gap=+12 was crashing into the upper-right
-  // quadrant label otherwise.
+  // Plot rect. Right edge stops before the x=952 legend rail; vertical span
+  // is generous (590px high) so dots near the top/bottom of the y-domain have
+  // breathing room from the quadrant eyebrows and so the chart fills the
+  // available frame height rather than sitting compact in the middle.
   const x0 = 200, x1 = 920;
-  const y0 = 230, y1 = 680;
+  const y0 = 200, y1 = 790;
 
   // X domain: 30 → 55 (% citing). Y domain: −15 → +15 pp gap.
   const xDomain = [30, 55];
