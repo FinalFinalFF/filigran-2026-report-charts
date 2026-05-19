@@ -384,7 +384,7 @@ a { color: inherit; }
 
     <aside class="ff-report" aria-label="Where this chart maps in the whitepaper"><div class="ff-report__row"><span class="ff-report__label">Report section</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">The real cost of poor prioritization: wasted time</a></span></div><div class="ff-report__row"><span class="ff-report__label">Whitepaper figure</span><span class="ff-report__value"><span style="color: var(--ff-text-muted);">— not a numbered figure —</span></span><span class="ff-report__fit ff-report__fit--unnumbered">Not a numbered figure</span></div><p class="ff-report__note">Not a numbered figure. Full Q18 distributions across Detect / Respond / Remediate — the whitepaper cites only the &quot;&gt; 1 day&quot; headline stats (72/71/83%) and not the underlying buckets.</p></aside>
 
-    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 470"></div></div>
+    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 506"></div></div>
 
     <div class="ff-callout">
       <div class="ff-callout__bar" aria-hidden="true"></div>
@@ -414,7 +414,7 @@ a { color: inherit; }
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 219 1200 470";</script>
+  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 224 1200 506";</script>
 
   <script type="text/babel" data-presets="react">
 // shared/frame.jsx
@@ -608,30 +608,35 @@ Object.assign(window, { B7_STAGES, B7_WASTED_PCT });
 
   <script type="text/babel" data-presets="react">
 // Artboard C — Three stacked distributions.
-// One small-multiple panel per stage (Detect / Respond / Remediate). Each
-// shows the bucketed distribution of response durations as a stacked
-// horizontal bar (<1d / 1–2d / 2–5d / >5d / not-measured). The "more than a
-// day" share is annotated above each panel — the report's headline framing.
+// One row per stage (Detect / Respond / Remediate). Each shows the bucketed
+// duration distribution as a stacked horizontal bar, with the 1-day threshold
+// line cutting through. Color ramps from light (fast) to dark (slow).
 
 function B7ArtboardDistributions() {
-  const W = 1200, H = 820;
+  const W = 1200, H = 900;
   const P = window.FIL_PALETTE;
   const stages = window.B7_STAGES;
 
-  // Bucket color ramp.
+  // Color ramp — sequential, lightest at "fast" end. FF restraint: blue
+  // ramp for the duration buckets, grey for "not measured", FF accent
+  // ONLY on the editorial threshold line and the "%>1 day" callout.
   const bucketColor = (key) => ({
-    '< 1 day':       P.good,
+    '< 1 day':       P.blueTint,
     '1–2 days':      P.blueLight,
     '2–5 days':      P.blueMid,
-    '> 5 days':      P.accent,
-    'Not measured':  P.inkSubtle,
-  })[key] || P.inkSubtle;
+    '> 5 days':      P.blue,
+    'Not measured':  P.ruleSoft,
+  })[key] || P.ruleSoft;
 
   // Geometry.
   const stripX0 = 110, stripX1 = 1110;
   const stripH = 56;
-  const startY = 280;
-  const stripGap = 156;
+  const legendY = 260;     // single legend above all three rows
+  const startY  = 320;     // first stage row
+  const stripGap = 156;    // vertical gap between stage rows
+
+  // Pick a contrasting text color for in-bar labels.
+  const fgForBucket = (k) => (k === '> 5 days') ? P.paper : P.ink;
 
   return (
     <window.ChartFrame
@@ -644,26 +649,58 @@ function B7ArtboardDistributions() {
       height={H}
       source="Source: Vanson Bourne survey for Filigran, Feb–Mar 2026"
     >
+      {/* Single legend above all three rows */}
+      {(() => {
+        const keys = ['< 1 day', '1–2 days', '2–5 days', '> 5 days', 'Not measured'];
+        let x = stripX0;
+        return (
+          <g>
+            <text x={stripX0} y={legendY - 18} fontSize="11"
+                  fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+                  fontWeight="500" letterSpacing="1">DURATION BUCKETS</text>
+            {keys.map(k => {
+              const labelW = 12 + k.length * 7.5;
+              const here = x;
+              x += labelW + 32;
+              return (
+                <g key={k}>
+                  <rect x={here} y={legendY - 4} width="14" height="14"
+                        fill={bucketColor(k)} rx="0" />
+                  <text x={here + 22} y={legendY + 8} fontSize="12"
+                        fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                        fontWeight="400">{k}</text>
+                </g>
+              );
+            })}
+          </g>
+        );
+      })()}
+
       {stages.map((s, si) => {
         const y = startY + si * stripGap;
         return (
           <g key={s.key}>
-            {/* Stage label */}
-            <text x={stripX0} y={y - 30} fontSize="20" fill={P.ink}
-                  fontWeight="700">{s.label}</text>
-            <text x={stripX0 + 110} y={y - 30} fontSize="13" fill={P.inkSoft}>
-              · avg {s.mean} days
-            </text>
+            {/* Stage label + average */}
+            <text x={stripX0} y={y - 30} fontSize="22"
+                  fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                  fontWeight="500">{s.label}</text>
+            <text x={stripX0 + 130} y={y - 30} fontSize="13"
+                  fontFamily={window.FIL_FONT_BODY} fill={P.inkSoft}
+                  fontWeight="400">avg {s.mean} days</text>
 
-            {/* "More than a day" callout, right aligned */}
-            <text fontFamily={window.FIL_FONT_DISPLAY} x={stripX1} y={y - 30} fontSize="26" fill={P.accent}
-                  fontWeight="300" textAnchor="end">{s.overOneDay}%</text>
-            <text x={stripX1} y={y - 12} fontSize="11" fill={P.inkSoft}
-                  fontWeight="600" textAnchor="end" letterSpacing="1">
+            {/* "% take more than a day" callout, right aligned */}
+            <text x={stripX1} y={y - 26} fontSize="36"
+                  fontFamily={window.FIL_FONT_DISPLAY} fill={P.accent}
+                  fontWeight="300" textAnchor="end"
+                  style={{ letterSpacing: '-0.02em' }}>{s.overOneDay}%</text>
+            <text x={stripX1} y={y - 8} fontSize="11"
+                  fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+                  fontWeight="500" letterSpacing="1" textAnchor="end">
               TAKE MORE THAN A DAY
             </text>
 
-            {/* The stacked bar */}
+            {/* The stacked bar — only show in-bar % for segments large
+                enough to host it; everything else lives in the top legend. */}
             {(() => {
               const totalW = stripX1 - stripX0;
               let cursor = stripX0;
@@ -673,34 +710,30 @@ function B7ArtboardDistributions() {
                 cursor += w;
                 const c = bucketColor(b.bucket);
                 const showText = w >= 60;
-                const fg = (b.bucket === '< 1 day' || b.bucket === '> 5 days' || b.bucket === '2–5 days')
-                         ? P.paper : P.ink;
                 return (
                   <g key={`${si}-${bi}`}>
-                    <rect x={here} y={y} width={w} height={stripH}
-                          fill={c} />
+                    <rect x={here} y={y} width={w} height={stripH} fill={c} />
                     {showText && (
-                      <g>
-                        <text x={here + 12} y={y + 22} fontSize="11"
-                              fill={fg} fontWeight="700">{b.bucket}</text>
-                        <text x={here + 12} y={y + 42} fontSize="14"
-                              fill={fg} fontWeight="600">{b.pct.toFixed(1)}%</text>
-                      </g>
+                      <text x={here + 12} y={y + 35} fontSize="16"
+                            fontFamily={window.FIL_FONT_DISPLAY}
+                            fill={fgForBucket(b.bucket)} fontWeight="300"
+                            style={{ letterSpacing: '-0.02em' }}>{b.pct.toFixed(1)}%</text>
                     )}
                   </g>
                 );
               });
             })()}
 
-            {/* "> 1 day" cutoff marker (i.e. boundary between <1d and 1–2d). */}
+            {/* 1-day threshold marker */}
             {(() => {
               const cutoff = stripX0 + (stripX1 - stripX0) * s.dist[0].pct / 100;
               return (
                 <g>
-                  <line x1={cutoff} y1={y - 10} x2={cutoff} y2={y + stripH + 14}
-                        stroke={P.accent} strokeWidth="2" strokeDasharray="3 4" />
-                  <text x={cutoff} y={y + stripH + 30} fontSize="10"
-                        fill={P.accent} fontWeight="700" letterSpacing="1"
+                  <line x1={cutoff} y1={y - 8} x2={cutoff} y2={y + stripH + 14}
+                        stroke={P.accent} strokeWidth="2" strokeDasharray="4 4" />
+                  <text x={cutoff} y={y + stripH + 30} fontSize="11"
+                        fontFamily={window.FIL_FONT_MONO} fill={P.accent}
+                        fontWeight="500" letterSpacing="1"
                         textAnchor="middle">↑ 1-DAY THRESHOLD</text>
                 </g>
               );
@@ -708,30 +741,6 @@ function B7ArtboardDistributions() {
           </g>
         );
       })}
-
-      {/* Legend strip */}
-      <g>
-        <text x={stripX0} y={H - 196} fontSize="10" fill={P.inkSoft}
-              fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">DURATION BUCKETS</text>
-        <line x1={stripX0} y1={H - 186} x2={stripX1} y2={H - 186} stroke={P.rule} />
-        {(() => {
-          const keys = ['< 1 day', '1–2 days', '2–5 days', '> 5 days', 'Not measured'];
-          let x = stripX0;
-          return keys.map(k => {
-            const w = 12 + k.length * 8.5;
-            const here = x;
-            x += w + 24;
-            return (
-              <g key={k}>
-                <rect x={here} y={H - 174} width="16" height="16"
-                      fill={bucketColor(k)} rx="0" />
-                <text x={here + 24} y={H - 161} fontSize="12" fill={P.ink}
-                      fontWeight="500">{k}</text>
-              </g>
-            );
-          });
-        })()}
-      </g>
     </window.ChartFrame>
   );
 }
