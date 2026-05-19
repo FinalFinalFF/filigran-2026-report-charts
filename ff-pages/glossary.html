@@ -1,0 +1,467 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glossary — Filigran 2026 Report · FinalFinal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ff-bg: #f7f7f7;
+      --ff-surface: #ffffff;
+      --ff-text: #000000;
+      --ff-text-muted: #666666;
+      --ff-accent: #DA3832;
+      --ff-divider: rgba(34, 34, 34, 0.2);
+      --ff-font-display: "Plus Jakarta Sans", "Helvetica Neue", Arial, sans-serif;
+      --ff-font-body:    "Inter", system-ui, sans-serif;
+      --ff-font-mono:    "IBM Plex Mono", "Courier New", monospace;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      background: var(--ff-bg); color: var(--ff-text);
+      font-family: var(--ff-font-body); font-size: 16px; line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; }
+
+    .ff-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 20px 60px; border-bottom: 1px solid var(--ff-divider);
+      background: var(--ff-surface); position: sticky; top: 0; z-index: 10;
+    }
+    .ff-nav__logo { font-family: var(--ff-font-display); font-weight: 400; font-size: 15px; text-decoration: none; color: var(--ff-text); }
+    .ff-nav__logo b { font-weight: 500; }
+    .ff-nav__logo .tm { font-size: 10px; vertical-align: super; opacity: 0.6; }
+    .ff-nav__meta { font-family: var(--ff-font-mono); font-size: 11px; color: var(--ff-text-muted); letter-spacing: -0.1px; }
+    .ff-nav__meta a { text-decoration: none; color: var(--ff-accent); }
+
+    .ff-hero { max-width: 1200px; margin: 0 auto; padding: 90px 60px 40px; }
+    .ff-eyebrow { font-family: var(--ff-font-mono); font-size: 12px; color: var(--ff-text-muted); text-transform: uppercase; margin: 0 0 28px 0; letter-spacing: -0.1px; }
+    .ff-headline { font-family: var(--ff-font-display); font-weight: 300; font-size: 60px; line-height: 1.0; letter-spacing: -0.015em; margin: 0 0 20px 0; max-width: 980px; }
+    .ff-lede { font-family: var(--ff-font-body); font-size: 22px; line-height: 1.4; color: var(--ff-text-muted); margin: 0; max-width: 720px; }
+
+    .ff-toc {
+      max-width: 1200px; margin: 0 auto;
+      padding: 24px 60px 0;
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px;
+    }
+    .ff-toc a {
+      font-family: var(--ff-font-mono); font-size: 12px;
+      color: var(--ff-text-muted); text-decoration: none;
+      letter-spacing: -0.1px; padding: 12px 14px;
+      border: 1px solid var(--ff-divider); background: var(--ff-surface);
+      transition: border-color .15s, color .15s;
+    }
+    .ff-toc a:hover { color: var(--ff-text); border-color: var(--ff-text); }
+    .ff-toc__num { color: var(--ff-accent); margin-right: 8px; }
+
+    .ff-body { max-width: 1200px; margin: 0 auto; padding: 40px 60px 80px; }
+
+    .ff-section { padding: 56px 0; border-top: 1px solid var(--ff-divider); display: grid; grid-template-columns: 220px 1fr; gap: 60px; align-items: start; }
+    .ff-section__header { position: sticky; top: 80px; }
+    .ff-section__num { font-family: var(--ff-font-mono); font-size: 12px; color: var(--ff-text-muted); letter-spacing: -0.1px; margin: 0 0 8px 0; }
+    .ff-section__title { font-family: var(--ff-font-display); font-weight: 400; font-size: 28px; line-height: 1.15; margin: 0 0 14px 0; }
+    .ff-section__lede { font-family: var(--ff-font-body); font-size: 14px; line-height: 1.5; color: var(--ff-text-muted); margin: 0; }
+
+    .ff-defs { margin: 0; padding: 0; list-style: none; }
+    .ff-defs > li {
+      padding: 22px 0; border-bottom: 1px solid var(--ff-divider);
+      display: grid; grid-template-columns: 240px 1fr; gap: 40px; align-items: start;
+    }
+    .ff-defs > li:last-child { border-bottom: none; }
+    .ff-defs__term { font-family: var(--ff-font-display); font-weight: 500; font-size: 17px; line-height: 1.3; color: var(--ff-text); }
+    .ff-defs__term .ff-defs__alias { font-family: var(--ff-font-mono); font-size: 12px; color: var(--ff-text-muted); font-weight: 400; margin-left: 8px; letter-spacing: -0.1px; }
+    .ff-defs__body { font-family: var(--ff-font-body); font-size: 15px; line-height: 1.55; color: var(--ff-text); }
+    .ff-defs__body p { margin: 0 0 8px 0; }
+    .ff-defs__body p:last-child { margin-bottom: 0; }
+    .ff-defs__body code, .ff-defs__source code {
+      font-family: var(--ff-font-mono); font-size: 12px;
+      background: var(--ff-bg); border: 1px solid var(--ff-divider);
+      padding: 1px 6px;
+    }
+    .ff-defs__source {
+      font-family: var(--ff-font-mono); font-size: 11px;
+      color: var(--ff-text-muted); margin: 6px 0 0 0;
+      letter-spacing: -0.1px;
+    }
+    .ff-defs__source a { color: var(--ff-accent); text-decoration: none; }
+    .ff-defs__source a:hover { text-decoration: underline; }
+
+    .ff-cohorts { width: 100%; border-collapse: collapse; font-family: var(--ff-font-body); font-size: 13px; background: var(--ff-surface); border: 1px solid var(--ff-divider); }
+    .ff-cohorts th { font-family: var(--ff-font-mono); font-size: 10px; color: var(--ff-text-muted); text-transform: uppercase; letter-spacing: 0.5px; text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--ff-divider); font-weight: 500; }
+    .ff-cohorts td { padding: 10px 14px; border-bottom: 1px solid var(--ff-divider); }
+    .ff-cohorts tr:last-child td { border-bottom: none; }
+
+    .ff-footer {
+      max-width: 1200px; margin: 60px auto 0; padding: 28px 60px 40px;
+      border-top: 1px solid var(--ff-divider);
+      display: flex; justify-content: space-between;
+      font-family: var(--ff-font-mono); font-size: 11px; color: var(--ff-text-muted);
+    }
+    @media (max-width: 1024px) {
+      .ff-section, .ff-defs > li { grid-template-columns: 1fr; gap: 16px; }
+      .ff-section__header { position: static; }
+      .ff-toc { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .ff-nav { padding: 16px 24px; }
+      .ff-hero, .ff-toc, .ff-body, .ff-footer { padding-left: 24px; padding-right: 24px; }
+      .ff-headline { font-size: 40px; }
+      .ff-toc { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="ff-nav">
+    <a href="index.html" class="ff-nav__logo"><b>FinalFinal</b><span class="tm">™</span> &nbsp;·&nbsp; Filigran 2026 Report</a>
+    <div class="ff-nav__meta"><a href="index.html">← All chart pages</a></div>
+  </nav>
+
+  <header class="ff-hero">
+    <p class="ff-eyebrow">Glossary · Read this before reviewing the charts</p>
+    <h1 class="ff-headline">The vocabulary behind the charts.</h1>
+    <p class="ff-lede">Every acronym, cohort, and methodology term used across the 21 chart pages — so you can audit the data without having to reverse-engineer the source spreadsheet.</p>
+  </header>
+
+  <nav class="ff-toc">
+    <a href="#concepts"><span class="ff-toc__num">01</span>Concepts</a>
+    <a href="#cohorts"><span class="ff-toc__num">02</span>Cohorts &amp; bases</a>
+    <a href="#tools"><span class="ff-toc__num">03</span>Tool categories</a>
+    <a href="#methodology"><span class="ff-toc__num">04</span>Survey methodology</a>
+    <a href="#sheets"><span class="ff-toc__num">05</span>Spreadsheet conventions</a>
+    <a href="#units"><span class="ff-toc__num">06</span>Units &amp; notation</a>
+  </nav>
+
+  <main class="ff-body">
+
+    <!-- ============================================================ -->
+    <section class="ff-section" id="concepts">
+      <div class="ff-section__header">
+        <p class="ff-section__num">01</p>
+        <h2 class="ff-section__title">Concepts</h2>
+        <p class="ff-section__lede">The core ideas the report is organized around. CTEM is the through-line; the rest qualify it.</p>
+      </div>
+      <ul class="ff-defs">
+
+        <li>
+          <div class="ff-defs__term">CTEM <span class="ff-defs__alias">Continuous Threat Exposure Management</span></div>
+          <div class="ff-defs__body">
+            <p>Gartner-coined framework for continuously identifying, prioritizing, validating, and remediating exposures across an organization's attack surface. Treats security as an always-on cycle (scope → discover → prioritize → validate → mobilize) rather than a periodic audit.</p>
+            <p>The whole report is organized around CTEM-maturity self-ratings. Almost every chart cuts the data by CTEM maturity.</p>
+          </div>
+        </li>
+
+        <li>
+          <div class="ff-defs__term">Exposure management <span class="ff-defs__alias">EM</span></div>
+          <div class="ff-defs__body">
+            <p>Broader umbrella for the practice of finding, evaluating, and reducing security exposures (misconfigurations, unpatched software, identity weaknesses, accessible assets, etc.). CTEM is the continuous flavor; "exposure management" without qualifier may include periodic programs.</p>
+          </div>
+        </li>
+
+        <li>
+          <div class="ff-defs__term">Validation of exploitability</div>
+          <div class="ff-defs__body">
+            <p>Confirming that a discovered vulnerability or exposure is actually exploitable in the organization's specific environment — i.e. that an attacker could realistically reach it and use it. The opposite of treating every CVE as equally urgent.</p>
+            <p>Figure 2 is the validation-failure story: <b>97% of orgs say they have difficulty validating exploitability</b>, with the cohort-gap concentrating on the skills/expertise barrier (+12pp for Laggards).</p>
+            <p class="ff-defs__source">Source: <code>Q17combi3</code></p>
+          </div>
+        </li>
+
+        <li>
+          <div class="ff-defs__term">Consolidated view of risk</div>
+          <div class="ff-defs__body">
+            <p>A unified, real-time picture of the organization's risk posture across all assets, tools, and business units — the opposite of a fragmented stack where each tool surfaces its own findings.</p>
+            <p>Used as a cohort dimension in Figures 2 and 5: respondents are split into three buckets (Fully consolidated / Mostly / Partial or none) from the <code>ExposureManagement</code> screener.</p>
+          </div>
+        </li>
+
+        <li>
+          <div class="ff-defs__term">PIR <span class="ff-defs__alias">Priority Intelligence Requirements</span></div>
+          <div class="ff-defs__body">
+            <p>A threat-intelligence methodology where the organization defines the specific threats and questions it most needs answered ("which APT groups target our sector? what TTPs do they use?"), then drives intel collection toward those questions instead of consuming generic feeds.</p>
+            <p>Shows up in Bonus 6 pair 2: <b>95% say they'd benefit from establishing PIRs</b>, but only <b>38% use threat intel in a continuous, fully automated validation process</b>.</p>
+            <p class="ff-defs__source">Source: <code>Q24_1</code> · <code>Q15</code></p>
+          </div>
+        </li>
+
+        <li>
+          <div class="ff-defs__term">Threat intelligence <span class="ff-defs__alias">TI</span></div>
+          <div class="ff-defs__body">
+            <p>External information about attacker activity — indicators of compromise (IOCs), tactics/techniques/procedures (TTPs), campaigns, infrastructure. Consumed via commercial feeds, open sources, ISACs, or internal collection. Effective TI is contextual and actionable; the report's tension is that most respondents say their TI isn't yet effective at prioritization.</p>
+          </div>
+        </li>
+
+        <li>
+          <div class="ff-defs__term">MTT-D / MTT-R / MTT-Remediate <span class="ff-defs__alias">Mean Time To Detect / Respond / Remediate</span></div>
+          <div class="ff-defs__body">
+            <p>Three sequential stages of the exposure window: how long it takes to <b>detect</b> a new exposure, <b>respond</b> to it (triage, investigate), and <b>remediate</b> it (patch, mitigate, accept). Each was asked as a 5-bucket distribution (&lt; 1 day, 1–2 days, 2–5 days, &gt; 5 days, not measured).</p>
+            <p>Bonus 7 visualizes these. Means: Detect 1.77 days · Respond 1.88 · Remediate 2.35.</p>
+            <p class="ff-defs__source">Source: <code>Q18_1</code> · <code>Q18_2</code> · <code>Q18_3</code></p>
+          </div>
+        </li>
+
+        <li>
+          <div class="ff-defs__term">Dead-end investigation</div>
+          <div class="ff-defs__body">
+            <p>Time a security analyst spends investigating a risk that turns out to be low-priority or non-exploitable. The report measures this as a percentage of total analyst time (Q13 mean). The visualization translates 42% of a 40-hour week ≈ 16.8 hours/analyst/week into a unit chart.</p>
+            <p class="ff-defs__source">Source: <code>Q13</code> (mean, n=550)</p>
+          </div>
+        </li>
+
+      </ul>
+    </section>
+
+    <!-- ============================================================ -->
+    <section class="ff-section" id="cohorts">
+      <div class="ff-section__header">
+        <p class="ff-section__num">02</p>
+        <h2 class="ff-section__title">Cohorts &amp; bases</h2>
+        <p class="ff-section__lede">Every chart that shows a "cohort split" is using one of these segments. The base sizes matter for confidence.</p>
+      </div>
+      <ul class="ff-defs">
+
+        <li>
+          <div class="ff-defs__term">Mature CTEM</div>
+          <div class="ff-defs__body">
+            <p>Respondents who self-described as having "CTEM in place and continuously refining" on the <code>ExposureManagement</code> screener. The "leaders" cohort across most cohort cuts.</p>
+            <p class="ff-defs__source">Base size: <b>n=252</b></p>
+          </div>
+        </li>
+
+        <li>
+          <div class="ff-defs__term">Planning CTEM</div>
+          <div class="ff-defs__body">
+            <p>Respondents who self-described as "planning to adopt CTEM" — they haven't started yet but have it on the roadmap. The smallest CTEM-maturity tier and the "laggard" cohort for figures 1, 3, and 4.</p>
+            <p class="ff-defs__source">Base size: <b>n=40</b> &nbsp;·&nbsp; small base — read cohort comparisons as directional, not statistically tight.</p>
+          </div>
+        </li>
+
+        <li>
+          <div class="ff-defs__term">Fully consolidated view</div>
+          <div class="ff-defs__body">
+            <p>Respondents who reported a fully consolidated view of risk across the organization. The "leaders" cohort for figures 2 and 5.</p>
+            <p class="ff-defs__source">Base size: <b>n=224</b></p>
+          </div>
+        </li>
+
+        <li>
+          <div class="ff-defs__term">Mostly consolidated view</div>
+          <div class="ff-defs__body">
+            <p>The middle tier — partial consolidation in place but with gaps. Used as the mid-cohort in figures 2 and 5.</p>
+            <p class="ff-defs__source">Base size: <b>n=269</b></p>
+          </div>
+        </li>
+
+        <li>
+          <div class="ff-defs__term">Partial / limited / no view</div>
+          <div class="ff-defs__body">
+            <p>The "laggards" cohort in figures 2 and 5 — respondents whose view of risk is fragmented, limited, or absent.</p>
+            <p class="ff-defs__source">Base size: <b>n=57</b> &nbsp;·&nbsp; smaller base; cohort gaps in this group have wider uncertainty.</p>
+          </div>
+        </li>
+
+        <li>
+          <div class="ff-defs__term">Regional splits</div>
+          <div class="ff-defs__body">
+            <p>The report doesn't visualize regional splits, but they're available in every sheet's cross-tab columns.</p>
+            <table class="ff-cohorts">
+              <thead><tr><th>Region</th><th>Base size</th></tr></thead>
+              <tbody>
+                <tr><td>North America</td><td>n=200</td></tr>
+                <tr><td>EMEA</td><td>n=200</td></tr>
+                <tr><td>APAC</td><td>n=150</td></tr>
+                <tr><td><b>Total</b></td><td><b>n=550</b></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </li>
+
+      </ul>
+    </section>
+
+    <!-- ============================================================ -->
+    <section class="ff-section" id="tools">
+      <div class="ff-section__header">
+        <p class="ff-section__num">03</p>
+        <h2 class="ff-section__title">Tool categories</h2>
+        <p class="ff-section__lede">The nine tool acronyms in Figure 1 (Q6). All are common in cybersecurity stacks; the split between <b>continuous</b> and <b>periodic</b> is the editorial frame used in the charts.</p>
+      </div>
+      <ul class="ff-defs">
+        <li>
+          <div class="ff-defs__term">CSPM <span class="ff-defs__alias">continuous</span></div>
+          <div class="ff-defs__body">Cloud Security Posture Management — continuous scanning of cloud-account configurations against best-practice and compliance benchmarks. Adoption: <b>57%</b> total · 59% Mature CTEM · 38% Planning.</div>
+        </li>
+        <li>
+          <div class="ff-defs__term">EASM <span class="ff-defs__alias">continuous</span></div>
+          <div class="ff-defs__body">External Attack Surface Management — discovers and monitors the assets exposed to the public internet from the outside-in. Adoption: <b>47%</b>.</div>
+        </li>
+        <li>
+          <div class="ff-defs__term">IAM / PAM <span class="ff-defs__alias">continuous</span></div>
+          <div class="ff-defs__body">Identity / Privileged Access Management — controls who can authenticate to what, with extra scrutiny on accounts with elevated privileges. Adoption: <b>47%</b>.</div>
+        </li>
+        <li>
+          <div class="ff-defs__term">GRC <span class="ff-defs__alias">continuous</span></div>
+          <div class="ff-defs__body">Governance, Risk &amp; Compliance — platform layer that ties controls to frameworks (NIST, ISO 27001, SOC 2). Adoption: <b>45%</b>, but with a notable cohort split (50% Mature vs 28% Planning).</div>
+        </li>
+        <li>
+          <div class="ff-defs__term">BAS <span class="ff-defs__alias">continuous</span></div>
+          <div class="ff-defs__body">Breach &amp; Attack Simulation — automated, continuous adversary emulation that runs known attack chains against the live environment to test defenses. Adoption: <b>44%</b>.</div>
+        </li>
+        <li>
+          <div class="ff-defs__term">TI feeds <span class="ff-defs__alias">periodic</span></div>
+          <div class="ff-defs__body">Threat Intelligence feeds — external streams of indicators and reporting. Coded as periodic in the chart because most orgs consume them in batch rather than continuously operationalize them. Adoption: <b>45%</b>.</div>
+        </li>
+        <li>
+          <div class="ff-defs__term">Vuln scanning <span class="ff-defs__alias">periodic</span></div>
+          <div class="ff-defs__body">Vulnerability scanning — typically scheduled scans (weekly, monthly) of internal assets against CVE databases. Adoption: <b>42%</b>.</div>
+        </li>
+        <li>
+          <div class="ff-defs__term">Pen testing <span class="ff-defs__alias">periodic</span></div>
+          <div class="ff-defs__body">Penetration testing — manual, time-bound red-team engagements. The most-periodic of the nine, and the one Mature-CTEM orgs are most willing to drop in favor of continuous tooling. Adoption: <b>41%</b>.</div>
+        </li>
+        <li>
+          <div class="ff-defs__term">Custom scripts <span class="ff-defs__alias">periodic</span></div>
+          <div class="ff-defs__body">In-house tooling — bespoke detection or assessment scripts. Adoption: <b>25%</b>.</div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============================================================ -->
+    <section class="ff-section" id="methodology">
+      <div class="ff-section__header">
+        <p class="ff-section__num">04</p>
+        <h2 class="ff-section__title">Survey methodology</h2>
+        <p class="ff-section__lede">How Vanson Bourne ran the field and how to read the numbers.</p>
+      </div>
+      <ul class="ff-defs">
+        <li>
+          <div class="ff-defs__term">Field period &amp; project</div>
+          <div class="ff-defs__body">
+            <p>Vanson Bourne, project <code>2025112501DG</code>, fielded Feb–Mar 2026. Online quantitative survey of 550 security decision-makers across North America (200), EMEA (200), and APAC (150).</p>
+          </div>
+        </li>
+        <li>
+          <div class="ff-defs__term">Multi-select</div>
+          <div class="ff-defs__body">
+            <p>Respondents can pick more than one answer. Total of all answer %s usually exceeds 100%. Used in Q6 (tools), Q20 (AI areas), Q23 (drivers), etc.</p>
+          </div>
+        </li>
+        <li>
+          <div class="ff-defs__term">Combined rank 1/2/3 <span class="ff-defs__alias">combi3</span></div>
+          <div class="ff-defs__body">
+            <p>The respondent was asked to rank a list of options. The <code>combi3</code> sheet sums the % of respondents who placed an option in their top three — so each respondent contributes to multiple rows. Used heavily in Q10 (buying criteria) and Q17 (validation barriers).</p>
+          </div>
+        </li>
+        <li>
+          <div class="ff-defs__term">Rank-1</div>
+          <div class="ff-defs__body">
+            <p>Same source data as <code>combi3</code>, but only the single highest-ranked option per respondent is counted. Useful when you want to know the <i>most</i>-important factor rather than the broad top-3.</p>
+          </div>
+        </li>
+        <li>
+          <div class="ff-defs__term">Mean / median</div>
+          <div class="ff-defs__body">
+            <p>For numeric questions (Q13 % time, Q19 % AI-driven, Q18 days), the bottom rows of the sheet give the cohort mean and median. The whitepaper leads with means; the medians are usually close.</p>
+          </div>
+        </li>
+        <li>
+          <div class="ff-defs__term">Don't knows / Not applicable</div>
+          <div class="ff-defs__body">
+            <p>For Q19 and a few others, "don't know" responses are excluded and percentages are renormalized to the remaining base. The difference between renormalized and raw is sub-percent across all questions checked.</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============================================================ -->
+    <section class="ff-section" id="sheets">
+      <div class="ff-section__header">
+        <p class="ff-section__num">05</p>
+        <h2 class="ff-section__title">Spreadsheet conventions</h2>
+        <p class="ff-section__lede">How the <a href="https://docs.google.com/spreadsheets/d/1xivLXtpR4c8NOiAGMW1dehRDXJrBUkyG/edit" target="_blank" rel="noopener" style="color: var(--ff-accent);">Vanson Bourne workbook</a> is structured. Naming patterns repeat across all 80+ tabs.</p>
+      </div>
+      <ul class="ff-defs">
+        <li>
+          <div class="ff-defs__term"><code>QN</code></div>
+          <div class="ff-defs__body">A single-question sheet (e.g. <code>Q6</code>, <code>Q23</code>). One sheet, all the splits as columns.</div>
+        </li>
+        <li>
+          <div class="ff-defs__term"><code>QN_M</code></div>
+          <div class="ff-defs__body">Multi-statement questions — each statement gets its own sheet. Q14 has six (<code>Q14_1</code> … <code>Q14_6</code>), each measuring agreement with one statement.</div>
+        </li>
+        <li>
+          <div class="ff-defs__term"><code>QN Summary</code></div>
+          <div class="ff-defs__body">Consolidated view for a multi-statement question — usually mean and top-2-box agreement scores per statement.</div>
+        </li>
+        <li>
+          <div class="ff-defs__term"><code>QNcombi3</code></div>
+          <div class="ff-defs__body">"Combined ranked 1st, 2nd, or 3rd" view for a ranking question. The dataset behind almost all the multi-barrier / multi-driver charts.</div>
+        </li>
+        <li>
+          <div class="ff-defs__term"><code>QNrank1</code></div>
+          <div class="ff-defs__body">"Top-rank only" view for the same question — counts only the respondent's #1 choice.</div>
+        </li>
+        <li>
+          <div class="ff-defs__term">Profile / Screener sheets</div>
+          <div class="ff-defs__body">
+            <p>Demographic and qualification questions: <code>HiddenProfileOrganisationSector</code>, <code>ProfileOrganisationSize</code>, <code>ProfileDepartment</code>, <code>SecurityResponsibility</code>, <code>ExposureManagement</code>, <code>ThreatIntelligence</code>, <code>ProfilePosition</code>.</p>
+            <p><code>ExposureManagement</code> is the source of the CTEM-maturity cohorts (Mature / Mostly / Planning) and the consolidated-view cohorts (Fully / Mostly / Partial) — most cohort splits in the charts trace back here.</p>
+          </div>
+        </li>
+        <li>
+          <div class="ff-defs__term">Sheet anatomy</div>
+          <div class="ff-defs__body">
+            <p>Each question sheet is a wide-format cross-tab: answer options run down the rows, then paired <b>Count | %</b> columns repeat for every demographic split (Total → Region → Country → Sector → Org Size → Department → Role).</p>
+            <p>Row 5–7 contain the split-group headers · row 8 has the base size for each split · data rows follow · bottom rows are Total / Mean / median where applicable.</p>
+            <p>Percentages are <i>column %</i>, not row %. Don't recompute from counts unless you need a different base.</p>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <!-- ============================================================ -->
+    <section class="ff-section" id="units">
+      <div class="ff-section__header">
+        <p class="ff-section__num">06</p>
+        <h2 class="ff-section__title">Units &amp; notation</h2>
+        <p class="ff-section__lede">Small but constant — these symbols appear on almost every chart.</p>
+      </div>
+      <ul class="ff-defs">
+        <li>
+          <div class="ff-defs__term"><b>%</b></div>
+          <div class="ff-defs__body">A column percentage within a specific cohort base (or the total). Never a row %, never a count.</div>
+        </li>
+        <li>
+          <div class="ff-defs__term"><b>pp</b> <span class="ff-defs__alias">percentage points</span></div>
+          <div class="ff-defs__body">
+            <p>The <i>absolute</i> difference between two percentages. "+12pp" means the second value is 12 percentage points higher than the first. Not the same as "12% more" (which would be a relative change).</p>
+            <p>Example: a barrier cited by 46% of Leaders vs 58% of Laggards = a <b>+12pp</b> gap, not a 26% gap.</p>
+          </div>
+        </li>
+        <li>
+          <div class="ff-defs__term"><b>n=</b></div>
+          <div class="ff-defs__body">Base size — number of respondents in this cohort. Where you see <code>n=550</code>, the chart uses the full sample. Where you see <code>n=40</code> (Planning CTEM), read cohort comparisons with that base in mind.</div>
+        </li>
+        <li>
+          <div class="ff-defs__term">Δ / "gap"</div>
+          <div class="ff-defs__body">A cohort gap — usually <b>Laggards − Leaders</b> or <b>Mature − Planning</b>, signed. Positive = the metric hurts laggards more (or matters less to mature orgs); negative = the opposite. Always given in <code>pp</code>.</div>
+        </li>
+        <li>
+          <div class="ff-defs__term">Top-2-box</div>
+          <div class="ff-defs__body">For agree/disagree-style scales, the sum of "Strongly agree" + "Agree". Used in Q4/Q14/Q22/Q24 summary sheets.</div>
+        </li>
+      </ul>
+    </section>
+
+  </main>
+
+  <footer class="ff-footer">
+    <span>FinalFinal™ × Filigran &nbsp;·&nbsp; 2026</span>
+    <span><a href="index.html" style="color: var(--ff-accent); text-decoration: none;">← All 21 chart pages</a></span>
+  </footer>
+</body>
+</html>

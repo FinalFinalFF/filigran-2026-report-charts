@@ -1,0 +1,16 @@
+.DS_Store
+*.pyc
+__pycache__/
+.venv/
+node_modules/
+
+# Generated state sidecar from the design-canvas wrapper (per-machine state).
+.design-canvas.state.json
+
+# Local-only: source JSX prototypes, generator, internal notes. The published
+# repo carries the rendered chart pages only — everything needed to display
+# the charts, nothing more.
+project/
+ff-pages/generate.py
+ff-pages/data_tables.py
+AGENTS.md

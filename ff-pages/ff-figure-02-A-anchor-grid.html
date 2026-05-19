@@ -1,0 +1,708 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Figure 2 · A · Anchored 97% grid — Filigran × FinalFinal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+:root {
+  --ff-bg: #f7f7f7;
+  --ff-surface: #ffffff;
+  --ff-text: #000000;
+  --ff-text-muted: #666666;
+  --ff-accent: #DA3832;
+  --ff-divider: rgba(34, 34, 34, 0.2);
+  --ff-font-display: "Plus Jakarta Sans", "Helvetica Neue", Arial, sans-serif;
+  --ff-font-body:    "Inter", system-ui, sans-serif;
+  --ff-font-mono:    "IBM Plex Mono", "Courier New", monospace;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+body {
+  background: var(--ff-bg);
+  color: var(--ff-text);
+  font-family: var(--ff-font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+a { color: inherit; }
+
+.ff-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 60px;
+  border-bottom: 1px solid var(--ff-divider);
+  background: var(--ff-surface);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.ff-nav__logo {
+  font-family: var(--ff-font-display);
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: -0.01em;
+  text-decoration: none;
+  color: var(--ff-text);
+}
+.ff-nav__logo b { font-weight: 500; }
+.ff-nav__logo .tm { font-size: 10px; vertical-align: super; opacity: 0.6; }
+.ff-nav__meta {
+  font-family: var(--ff-font-mono);
+  font-size: 11px;
+  color: var(--ff-text-muted);
+  letter-spacing: -0.1px;
+}
+
+.ff-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 60px 40px;
+}
+
+.ff-eyebrow {
+  font-family: var(--ff-font-mono);
+  font-size: 12px;
+  color: var(--ff-text-muted);
+  letter-spacing: -0.1px;
+  text-transform: uppercase;
+  margin: 0 0 28px 0;
+}
+
+.ff-headline {
+  font-family: var(--ff-font-display);
+  font-weight: 300;
+  font-size: 46px;
+  line-height: 1.05;
+  letter-spacing: -0.015em;
+  color: var(--ff-text);
+  margin: 0 0 18px 0;
+  max-width: 980px;
+}
+
+.ff-subtitle {
+  font-family: var(--ff-font-body);
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 1.4;
+  color: var(--ff-text-muted);
+  margin: 0 0 12px 0;
+  max-width: 880px;
+}
+
+.ff-caption {
+  font-family: var(--ff-font-mono);
+  font-size: 11px;
+  color: var(--ff-text-muted);
+  letter-spacing: -0.1px;
+  margin: 0 0 36px 0;
+  max-width: 880px;
+}
+
+.ff-chart {
+  background: var(--ff-surface);
+  border: 1px solid var(--ff-divider);
+  padding: 24px;
+  margin: 0;
+}
+.ff-chart__inner {
+  width: 100%;
+  /* SVG renders at intrinsic 1200x900; let it scale to container width */
+  aspect-ratio: 1200 / 900;
+}
+.ff-chart svg { display: block; width: 100%; height: 100%; }
+
+.ff-callout {
+  display: grid;
+  grid-template-columns: 4px 1fr;
+  gap: 20px;
+  margin-top: 40px;
+}
+.ff-callout__bar {
+  background: var(--ff-accent);
+  width: 4px;
+}
+.ff-callout__label {
+  font-family: var(--ff-font-mono);
+  font-size: 11px;
+  color: var(--ff-accent);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin: 0 0 8px 0;
+  font-weight: 400;
+}
+.ff-callout__body {
+  font-family: var(--ff-font-body);
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.5;
+  color: var(--ff-text);
+  margin: 0;
+  max-width: 820px;
+}
+
+.ff-source {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 48px;
+  padding-top: 18px;
+  border-top: 1px solid var(--ff-divider);
+  font-family: var(--ff-font-mono);
+  font-size: 11px;
+  color: var(--ff-text-muted);
+  letter-spacing: -0.1px;
+}
+.ff-source__credit { color: var(--ff-text); }
+
+.ff-data {
+  max-width: 1200px;
+  margin: 64px auto 0;
+  padding: 40px 60px 0;
+  border-top: 1px solid var(--ff-divider);
+}
+.ff-data__eyebrow {
+  font-family: var(--ff-font-mono);
+  font-size: 12px;
+  color: var(--ff-text-muted);
+  letter-spacing: -0.1px;
+  margin: 0 0 14px 0;
+}
+.ff-data__source {
+  font-family: var(--ff-font-mono);
+  font-size: 11px;
+  color: var(--ff-text);
+  margin: 0 0 28px 0;
+  letter-spacing: -0.1px;
+}
+.ff-data__source a { color: var(--ff-accent); text-decoration: none; }
+.ff-data__source a:hover { text-decoration: underline; }
+.ff-data__source code {
+  font-family: var(--ff-font-mono);
+  font-size: 11px;
+  background: var(--ff-bg);
+  border: 1px solid var(--ff-divider);
+  padding: 1px 6px;
+}
+.ff-data__subheader {
+  font-family: var(--ff-font-mono);
+  font-size: 11px;
+  color: var(--ff-text-muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 28px 0 12px 0;
+}
+.ff-data__table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0;
+  font-family: var(--ff-font-body);
+  font-size: 13px;
+  background: var(--ff-surface);
+  border: 1px solid var(--ff-divider);
+}
+.ff-data__table th {
+  font-family: var(--ff-font-mono);
+  font-size: 10px;
+  color: var(--ff-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: left;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--ff-divider);
+  font-weight: 500;
+  vertical-align: bottom;
+}
+.ff-data__table td {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--ff-divider);
+  color: var(--ff-text);
+  vertical-align: top;
+}
+.ff-data__table tr:last-child td { border-bottom: none; }
+.ff-data__table tfoot td {
+  font-family: var(--ff-font-mono);
+  font-size: 12px;
+  border-top: 1px solid var(--ff-divider);
+  border-bottom: none;
+  color: var(--ff-text);
+  background: var(--ff-bg);
+}
+.ff-data__table code {
+  font-family: var(--ff-font-mono);
+  font-size: 11px;
+}
+.ff-data__notes {
+  font-family: var(--ff-font-body);
+  font-size: 13px;
+  color: var(--ff-text-muted);
+  margin: 20px 0 0 0;
+  line-height: 1.5;
+  max-width: 880px;
+}
+
+.ff-report {
+  margin: 0 0 36px 0;
+  padding: 16px 18px;
+  border: 1px solid var(--ff-divider);
+  background: var(--ff-surface);
+  font-family: var(--ff-font-mono);
+  font-size: 11px;
+  color: var(--ff-text-muted);
+  letter-spacing: -0.1px;
+  line-height: 1.5;
+}
+.ff-report__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  align-items: baseline;
+  margin: 0 0 8px 0;
+}
+.ff-report__row:last-child { margin-bottom: 0; }
+.ff-report__label {
+  font-family: var(--ff-font-mono);
+  font-size: 10px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ff-text-muted);
+}
+.ff-report__value {
+  font-family: var(--ff-font-body);
+  font-size: 13px;
+  color: var(--ff-text);
+  font-weight: 500;
+}
+.ff-report__value a { color: var(--ff-accent); text-decoration: none; }
+.ff-report__value a:hover { text-decoration: underline; }
+.ff-report__fit {
+  display: inline-block;
+  padding: 1px 8px;
+  font-family: var(--ff-font-mono);
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: 1px solid currentColor;
+}
+.ff-report__fit--clean      { color: #2f7a3d; }   /* green-ish */
+.ff-report__fit--mixed      { color: #b8731e; }   /* amber */
+.ff-report__fit--unnumbered { color: var(--ff-accent); }
+.ff-report__note {
+  font-family: var(--ff-font-body);
+  font-size: 13px;
+  color: var(--ff-text);
+  line-height: 1.5;
+  margin: 4px 0 0 0;
+  max-width: 880px;
+}
+
+.ff-pager {
+  max-width: 1200px;
+  margin: 64px auto 0;
+  padding: 40px 60px 0;
+  border-top: 1px solid var(--ff-divider);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.ff-pager a, .ff-pager__empty {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px 24px;
+  background: var(--ff-surface);
+  border: 1px solid var(--ff-divider);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .15s ease;
+  min-height: 96px;
+}
+.ff-pager a:hover { border-color: var(--ff-text); }
+.ff-pager__empty { background: transparent; border-color: transparent; }
+.ff-pager__dir {
+  font-family: var(--ff-font-mono);
+  font-size: 11px;
+  color: var(--ff-text-muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+.ff-pager--next { text-align: right; }
+.ff-pager__meta {
+  font-family: var(--ff-font-mono);
+  font-size: 11px;
+  color: var(--ff-accent);
+  letter-spacing: -0.1px;
+}
+.ff-pager__title {
+  font-family: var(--ff-font-display);
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.2;
+  color: var(--ff-text);
+  margin: 0;
+}
+
+.ff-footer {
+  max-width: 1200px;
+  margin: 60px auto 0;
+  padding: 28px 60px 40px;
+  border-top: 1px solid var(--ff-divider);
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--ff-font-mono);
+  font-size: 11px;
+  color: var(--ff-text-muted);
+  letter-spacing: -0.1px;
+}
+
+@media (max-width: 768px) {
+  .ff-nav { padding: 16px 24px; }
+  .ff-page { padding: 40px 24px 32px; }
+  .ff-headline { font-size: 32px; }
+  .ff-subtitle { font-size: 17px; }
+  .ff-footer { padding: 24px 24px 32px; }
+}
+</style>
+</head>
+<body>
+  <nav class="ff-nav">
+    <a href="index.html" class="ff-nav__logo"><b>FinalFinal</b><span class="tm">™</span> &nbsp;·&nbsp; Filigran 2026 Report</a>
+    <div class="ff-nav__meta">Figure 2 &nbsp;·&nbsp; A &nbsp;·&nbsp; Anchored 97% grid &nbsp;·&nbsp; <a href="glossary.html" style="color: var(--ff-accent); text-decoration: none;">Glossary</a></div>
+  </nav>
+
+  <main class="ff-page">
+    <p class="ff-eyebrow">FIGURE 2 · WHY VALIDATION OF EXPLOITABILITY IS FAILING</p>
+    <h1 class="ff-headline">97% of organizations can't tell which risks are actually exploitable.</h1>
+    <p class="ff-subtitle">Half is process drag. Half is capability gap.</p>
+    <p class="ff-caption">Q17 · Combined responses ranked 1st, 2nd, or 3rd · n=550</p>
+
+    <aside class="ff-report" aria-label="Where this chart maps in the whitepaper"><div class="ff-report__row"><span class="ff-report__label">Report section</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">The prioritization bottleneck</a></span></div><div class="ff-report__row"><span class="ff-report__label">Whitepaper figure</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">Figure 2</a></span><span class="ff-report__fit ff-report__fit--clean">Maps cleanly</span></div><p class="ff-report__note">Maps directly to whitepaper Figure 2 (Q17 validation barriers), with the 97% headline anchor pulled forward from the section prose.</p></aside>
+
+    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root"></div></div>
+
+    <div class="ff-callout">
+      <div class="ff-callout__bar" aria-hidden="true"></div>
+      <div>
+        <p class="ff-callout__label">Pause on this</p>
+        <p class="ff-callout__body">Among organizations without a consolidated view of risk, the skills gap jumps to 58% — 12 points above the average.</p>
+      </div>
+    </div>
+
+
+    <div class="ff-source">
+      <span>Source: Vanson Bourne survey for Filigran, Feb–Mar 2026 &nbsp;·&nbsp; n=550</span>
+      <span class="ff-source__credit">State of Threat Management — a Filigran report</span>
+    </div>
+  </main>
+
+<nav class="ff-pager" aria-label="Chart navigation"><a class="ff-pager__card" href="ff-figure-01-C-gap-bars.html"><span class="ff-pager__dir">← Previous</span><span class="ff-pager__meta">Figure 1 · C</span><span class="ff-pager__title">Divergent gap bars</span></a><a class="ff-pager__card ff-pager--next" href="ff-figure-02-B-quadrant.html"><span class="ff-pager__dir">Next →</span><span class="ff-pager__meta">Figure 2 · B</span><span class="ff-pager__title">Frequency × cohort-gap quadrant</span></a></nav>
+
+<section class="ff-data"><p class="ff-data__eyebrow">DATA BEHIND THIS CHART</p><p class="ff-data__source"><a href="https://docs.google.com/spreadsheets/d/1xivLXtpR4c8NOiAGMW1dehRDXJrBUkyG/edit" target="_blank" rel="noopener">Filigran 2026 Final Data Report v1.1</a> &nbsp;·&nbsp; <code>Q17combi3</code> &nbsp;·&nbsp; n=550 &nbsp;·&nbsp; Combined responses ranked 1st, 2nd, or 3rd. Multi-select.</p><table class="ff-data__table"><thead><tr><th>Barrier</th><th>Long statement</th><th>Total %</th><th>Bucket</th></tr></thead><tbody><tr><td>Disrupting systems</td><td>Concerns about disrupting systems or causing unintended issues</td><td>49%</td><td>Capability</td></tr><tr><td>Manual effort</td><td>Checking whether risks are real relies too much on manual effort</td><td>46%</td><td>Operational</td></tr><tr><td>Skills / expertise</td><td>Limited skills or expertise to check whether risks can be exploited</td><td>44%</td><td>Capability</td></tr><tr><td>Not integrated</td><td>Checking whether risks are real is not well integrated into existing tools</td><td>42%</td><td>Operational</td></tr><tr><td>Too much time</td><td>Checking whether risks are real takes too much time</td><td>40%</td><td>Operational</td></tr><tr><td>Lower priority</td><td>Checking whether risks are real is a lower priority than other security work</td><td>37%</td><td>Operational</td></tr><tr><td>Missing the tools</td><td>Missing the right tools to check whether risks are real</td><td>32%</td><td>Capability</td></tr></tbody></table><p class="ff-data__notes">97% = share of respondents who reported difficulty validating exploitability (rank-1 through rank-7 across all barrier options).</p></section>
+
+  <footer class="ff-footer">
+    <span>FinalFinal™ × Filigran &nbsp;·&nbsp; 2026</span>
+    <span>Generated for InDesign placement</span>
+  </footer>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
+
+  <script>window.FF_CHROMELESS = true;</script>
+
+  <script type="text/babel" data-presets="react">
+// shared/frame.jsx
+// Common chart-page chrome and brand tokens used across Figures 2–7.
+// Matches the pattern established by figure-01-tools/shared.jsx (F1_ChartFrame)
+// so the cross-figure visual system stays locked.
+
+const FIL_PALETTE = {
+  ink:        '#101828',
+  inkSoft:    '#475467',
+  inkSubtle:  '#98A2B3',
+  rule:       '#E4E7EC',
+  ruleSoft:   '#EAECF0',
+  blue:       '#1E40AF',  // Filigran primary
+  blueMid:    '#3B82F6',
+  blueLight:  '#BFDBFE',
+  blueTint:   '#EFF4FF',
+  orange:     '#F26C2C',  // "Pause on this" accent — used sparingly
+  orangeTint: '#FEEFE4',
+  good:       '#0E9F6E',  // secondary accent (leader indicator)
+  goodTint:   '#D1FAE5',
+  paper:      '#FFFFFF',
+};
+
+const FIL_FONT = `'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+
+// ChartFrame — every artboard wraps its chart in this. Eyebrow → headline →
+// subtitle → caption sit above; an orange "PAUSE ON THIS" callout and a
+// source / credit row sit below. The chart slot is the children area.
+function ChartFrame({
+  eyebrow,
+  headline,
+  subtitle,
+  caption,
+  callout,
+  children,
+  width = 1200,
+  height = 900,
+  source = 'Source: Vanson Bourne survey for Filigran, Feb–Mar 2026 · n=550',
+}) {
+  // FF_CHROMELESS short-circuit: when the FinalFinal page wrapper has
+  // already rendered eyebrow/headline/subtitle/caption/callout/source as
+  // HTML, ChartFrame should emit only the chart marks inside a bare SVG.
+  if (typeof window !== "undefined" && window.FF_CHROMELESS) {
+    return (
+      <svg xmlns="http://www.w3.org/2000/svg"
+           viewBox={`0 0 ${width} ${height}`}
+           width="100%" height="100%"
+           preserveAspectRatio="xMidYMid meet"
+           style={{ display: "block", background: "#fff", fontFamily: "Inter, system-ui, sans-serif" }}>
+        <g>{children}</g>
+      </svg>
+    );
+  }
+
+  const padL = 72;
+  const padR = 72;
+  const ruleY = height - 54;
+  const sourceY = height - 36;
+  return (
+    <svg xmlns="http://www.w3.org/2000/svg"
+         viewBox={`0 0 ${width} ${height}`}
+         width="100%" height="100%"
+         style={{ display: 'block', background: FIL_PALETTE.paper, fontFamily: FIL_FONT }}>
+      <text x={padL} y={72} fontSize="11" fill={FIL_PALETTE.inkSoft}
+            fontWeight="600" letterSpacing="2">{eyebrow}</text>
+
+      <text x={padL} y={128} fontSize="32" fill={FIL_PALETTE.ink}
+            fontWeight="700" style={{ letterSpacing: '-0.01em' }}>{headline}</text>
+
+      {subtitle && (
+        <text x={padL} y={166} fontSize="18" fill={FIL_PALETTE.inkSoft}
+              fontWeight="500">{subtitle}</text>
+      )}
+
+      <text x={padL} y={194} fontSize="12" fill={FIL_PALETTE.inkSoft}
+            fontWeight="400">{caption}</text>
+
+      <g>{children}</g>
+
+      {callout && (
+        <g>
+          <rect x={padL} y={height - 162} width="4" height="60"
+                fill={FIL_PALETTE.orange} rx="0" />
+          <text x={padL + 16} y={height - 146} fontSize="10"
+                fill={FIL_PALETTE.orange} fontWeight="700"
+                letterSpacing="2">PAUSE ON THIS</text>
+          <text x={padL + 16} y={height - 122} fontSize="13"
+                fill={FIL_PALETTE.ink} fontWeight="500">{callout}</text>
+        </g>
+      )}
+
+      <line x1={padL} y1={ruleY} x2={width - padR} y2={ruleY}
+            stroke={FIL_PALETTE.rule} strokeWidth="1" />
+      <text x={padL} y={sourceY} fontSize="10" fill={FIL_PALETTE.inkSoft}
+            fontWeight="400">
+        {source}
+      </text>
+      <text x={width - padR} y={sourceY} fontSize="10" fill={FIL_PALETTE.inkSoft}
+            fontWeight="600" textAnchor="end">
+        State of Threat Management — a Filigran report
+      </text>
+    </svg>
+  );
+}
+
+// Generic side legend section: small uppercase eyebrow + hairline rule +
+// children below. Used heavily by artboards' right-rail panels.
+function FrameLegendSection({ x, y, w = 208, title, children }) {
+  return (
+    <g>
+      <text x={x} y={y} fontSize="10" fill={FIL_PALETTE.inkSoft}
+            fontWeight="700" letterSpacing="2">{title}</text>
+      <line x1={x} y1={y + 10} x2={x + w} y2={y + 10}
+            stroke={FIL_PALETTE.rule} />
+      {children}
+    </g>
+  );
+}
+
+Object.assign(window, { FIL_PALETTE, FIL_FONT, ChartFrame, FrameLegendSection });
+
+  </script>
+  <script type="text/babel" data-presets="react">
+// data.jsx — Figure 2 data (Q17, validation challenges) + cohort cuts.
+// All percentages from the Vanson Bourne survey for Filigran (n=550).
+
+const F2_HEADLINE_PCT = 97;  // % of orgs that report any difficulty validating
+
+// Each barrier carries:
+//   total: % citing it (combined rank 1/2/3, multi-select)
+//   bucket: 'op' (operational drag) or 'cap' (capability gap)
+//   skills_partial: only relevant to the "Limited skills" row -- it's the
+//     callout barrier whose laggard cohort over-indexes most. Provided per-row
+//     for any artboard that wants to surface its own cohort split.
+//   leaders / mid / laggards: % among Fully-consolidated / Mostly / Partial-or-none
+//     consolidated-view cohorts. Used by the cohort-multiples artboard.
+
+const F2_BARRIERS = [
+  { key: 'disrupt',  short: 'Disrupting systems', label: 'Concerns about disrupting systems or causing unintended issues',
+    total: 49, bucket: 'cap', leaders: 44, mid: 53, laggards: 47 },
+  { key: 'manual',   short: 'Manual effort',      label: 'Checking whether risks are real relies too much on manual effort',
+    total: 46, bucket: 'op',  leaders: 43, mid: 51, laggards: 39 },
+  { key: 'skills',   short: 'Skills / expertise', label: 'Limited skills or expertise to check whether risks can be exploited',
+    total: 44, bucket: 'cap', leaders: 46, mid: 39, laggards: 58 },
+  { key: 'integ',    short: 'Not integrated',     label: 'Checking whether risks are real is not well integrated into existing tools',
+    total: 42, bucket: 'op',  leaders: 42, mid: 41, laggards: 44 },
+  { key: 'time',     short: 'Too much time',      label: 'Checking whether risks are real takes too much time',
+    total: 40, bucket: 'op',  leaders: 32, mid: 47, laggards: 42 },
+  { key: 'priority', short: 'Lower priority',     label: 'Checking whether risks are real is a lower priority than other security work',
+    total: 37, bucket: 'op',  leaders: 42, mid: 34, laggards: 32 },
+  { key: 'tools',    short: 'Missing the tools',  label: 'Missing the right tools to check whether risks are real',
+    total: 32, bucket: 'cap', leaders: 29, mid: 34, laggards: 39 },
+];
+
+// Convenience subsets used by multiple artboards.
+const F2_OP   = F2_BARRIERS.filter(b => b.bucket === 'op')
+                          .sort((a, b) => b.total - a.total);
+const F2_CAP  = F2_BARRIERS.filter(b => b.bucket === 'cap')
+                          .sort((a, b) => b.total - a.total);
+const F2_ALL  = [...F2_BARRIERS].sort((a, b) => b.total - a.total);
+
+Object.assign(window, { F2_HEADLINE_PCT, F2_BARRIERS, F2_OP, F2_CAP, F2_ALL });
+
+  </script>
+
+  <script type="text/babel" data-presets="react">
+// Artboard A — Anchored grid: the 97% headline is the visual centerpiece,
+// the seven barriers organize into two columns (operational drag vs.
+// capability gap) on the right. Color encodes the column. Bars share a
+// max-scale so any value comparison across columns is honest.
+
+function F2ArtboardAnchorGrid() {
+  const W = 1200, H = 900;
+  const P = window.FIL_PALETTE;
+
+  // Big "97%" geometry.
+  const bigX = 96, bigY = 412;
+  const bigSize = 200;
+
+  // Right-hand column block.
+  const colX = 560, colW = 560;
+  const colTop = 248;
+  const rowH = 34, rowGap = 14;
+  const maxPct = 50;  // every bar fits without dominating the column
+
+  // Render a single grouped column of barriers.
+  const renderGroup = (items, y0, color, colorSoft, header, sub) => {
+    let y = y0;
+    const out = [];
+    out.push(
+      <text key={`h-${header}`} x={colX} y={y} fontSize="11" fill={color}
+            fontWeight="700" letterSpacing="2">{header}</text>,
+      <text key={`s-${header}`} x={colW + colX} y={y} fontSize="11"
+            fill={P.inkSubtle} fontWeight="500" textAnchor="end">{sub}</text>,
+      <line key={`r-${header}`} x1={colX} y1={y + 8} x2={colX + colW} y2={y + 8}
+            stroke={colorSoft} strokeWidth="1" />
+    );
+    y += 30;
+    items.forEach((b, i) => {
+      const w = colW * (b.total / maxPct);
+      out.push(
+        <rect key={`bg-${b.key}`} x={colX} y={y} width={colW} height={rowH}
+              fill={colorSoft} rx="4" />,
+        <rect key={`fg-${b.key}`} x={colX} y={y} width={w} height={rowH}
+              fill={color} rx="4" />,
+        <text key={`lb-${b.key}`} x={colX + 14} y={y + 22} fontSize="13"
+              fill={P.paper} fontWeight="600">{b.short}</text>,
+        <text key={`pc-${b.key}`} x={colX + colW - 12} y={y + 22} fontSize="14"
+              fill={P.ink} fontWeight="800" textAnchor="end">{b.total}%</text>
+      );
+      y += rowH + rowGap;
+    });
+    return { elems: out, nextY: y };
+  };
+
+  const groupA = renderGroup(window.F2_OP, colTop, P.blue, P.blueLight,
+    'OPERATIONAL DRAG', 'process is too slow');
+  const groupB = renderGroup(window.F2_CAP, groupA.nextY + 28, P.inkSoft, P.ruleSoft,
+    'CAPABILITY GAP', 'we don\'t have what we need');
+
+  return (
+    <window.ChartFrame
+      eyebrow="FIGURE 2 · WHY VALIDATION OF EXPLOITABILITY IS FAILING"
+      headline="97% of organizations can't tell which risks are actually exploitable."
+      subtitle="Half is process drag. Half is capability gap."
+      caption="Q17 · Combined responses ranked 1st, 2nd, or 3rd · n=550"
+      callout="Among organizations without a consolidated view of risk, the skills gap jumps to 58% — 12 points above the average."
+      width={W}
+      height={H}
+    >
+      {/* Big 97% */}
+      <text x={bigX} y={bigY} fontSize={bigSize} fill={P.blue}
+            fontWeight="800" style={{ letterSpacing: '-0.04em' }}>97</text>
+      <text x={bigX + 232} y={bigY - 96} fontSize="84" fill={P.blue}
+            fontWeight="800">%</text>
+      <text x={bigX} y={bigY + 72} fontSize="14" fill={P.inkSoft}>
+        of organizations report difficulty
+      </text>
+      <text x={bigX} y={bigY + 92} fontSize="14" fill={P.inkSoft}>
+        validating exploitability
+      </text>
+
+      {/* Decorative connector — short arc from 97% over to the two columns,
+          letting the eye follow the breakdown */}
+      <path d={`M ${bigX + 280} ${bigY - 30} Q ${colX - 70} ${bigY - 40}, ${colX - 10} ${groupA.nextY / 2 + colTop / 2}`}
+            stroke={P.rule} strokeWidth="1" fill="none"
+            strokeDasharray="2 5" />
+
+      {groupA.elems}
+      {groupB.elems}
+
+      {/* Lower-left supporting block: the "97% face challenges" -> split */}
+      <g>
+        <text x={bigX} y={bigY + 160} fontSize="10" fill={P.inkSoft}
+              fontWeight="700" letterSpacing="2">HOW THE 97% BREAKS DOWN</text>
+        <line x1={bigX} y1={bigY + 170} x2={bigX + 360} y2={bigY + 170}
+              stroke={P.rule} />
+        {/* Stacked bar showing the average response weight across the two buckets */}
+        {(() => {
+          const opAvg = window.F2_OP.reduce((s, b) => s + b.total, 0) / window.F2_OP.length;
+          const capAvg = window.F2_CAP.reduce((s, b) => s + b.total, 0) / window.F2_CAP.length;
+          const total = opAvg + capAvg;
+          const w = 360, h = 26;
+          const opW = w * opAvg / total;
+          const capW = w * capAvg / total;
+          return (
+            <g>
+              <rect x={bigX} y={bigY + 188} width={opW} height={h} fill={P.blue} rx="4" />
+              <rect x={bigX + opW} y={bigY + 188} width={capW} height={h} fill={P.inkSoft} rx="4" />
+              <text x={bigX + opW / 2} y={bigY + 206} fontSize="11"
+                    fill={P.paper} fontWeight="700" textAnchor="middle">Op drag avg {opAvg.toFixed(0)}%</text>
+              <text x={bigX + opW + capW / 2} y={bigY + 206} fontSize="11"
+                    fill={P.paper} fontWeight="700" textAnchor="middle">Capability avg {capAvg.toFixed(0)}%</text>
+            </g>
+          );
+        })()}
+      </g>
+    </window.ChartFrame>
+  );
+}
+
+Object.assign(window, { F2ArtboardAnchorGrid });
+
+  </script>
+  <script type="text/babel" data-presets="react">
+const __Artboard = window.F2ArtboardAnchorGrid;
+ReactDOM.createRoot(document.getElementById('chart-root')).render(<__Artboard />);
+  </script>
+</body>
+</html>
