@@ -379,12 +379,12 @@ a { color: inherit; }
   <main class="ff-page">
     <p class="ff-eyebrow">THE ASPIRATION / PRACTICE GAP</p>
     <h1 class="ff-headline">On the left: what they say. On the right: what they do.</h1>
-    <p class="ff-subtitle">Each pair shares a colored ribbon — the wider the ribbon, the wider the gap.</p>
+    <p class="ff-subtitle">Per pair: gray bar shows the share who agree (SAY); blue bar shows the share who actually do it. The gap on the spine is the distance between them.</p>
     <p class="ff-caption">Pairs drawn from across the survey · n=550</p>
 
     <aside class="ff-report" aria-label="Where this chart maps in the whitepaper"><div class="ff-report__row"><span class="ff-report__label">Report section</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">Synthesis across &quot;Exposure gap&quot;, &quot;Prioritization&quot;, &quot;Validate&quot;, and &quot;AI&quot; sections</a></span></div><div class="ff-report__row"><span class="ff-report__label">Whitepaper figure</span><span class="ff-report__value"><span style="color: var(--ff-text-muted);">— not a numbered figure —</span></span><span class="ff-report__fit ff-report__fit--unnumbered">Not a numbered figure</span></div><p class="ff-report__note">Not a whitepaper figure. Same pairs as 6A, shown as a diverging ribbon layout.</p></aside>
 
-    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 494"></div></div>
+    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 569"></div></div>
 
     <div class="ff-callout">
       <div class="ff-callout__bar" aria-hidden="true"></div>
@@ -414,7 +414,7 @@ a { color: inherit; }
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 234 1200 494";</script>
+  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 224 1200 569";</script>
 
   <script type="text/babel" data-presets="react">
 // shared/frame.jsx
@@ -600,117 +600,128 @@ Object.assign(window, { B6_PAIRS });
 
   <script type="text/babel" data-presets="react">
 // Artboard C — Diverging "say" vs "do" composition.
-// Eight numbers in two clusters: aspirations on the left side of a center
-// spine, practices on the right. Bar widths are scaled by the pct value;
-// each pair shares a colored ribbon connecting them so the eye can trace
-// the gap. The gap magnitude is also shown as a numeric chip on the ribbon.
+// Center spine; gray bar extends left (SAY %), blue bar extends right (DO %),
+// gap label on the spine. Per-row topic name above; survey statements under
+// each bar; Q-tab refs as small corner labels.
 
 function B6ArtboardDiverging() {
   const W = 1200, H = 900;
   const P = window.FIL_PALETTE;
   const pairs = window.B6_PAIRS;
 
-  // Geometry
+  // Short topic name per pair.
+  const topicFor = {
+    periodic: 'Periodic vs manual assessment',
+    pirs:     'PIRs vs continuous threat intel',
+    known:    'Known risks vs dead-end time',
+    validate: 'Validation difficulty vs effective TI',
+  };
+
+  // Geometry — bars extend up to maxLen at 100%; both sides share a 0-100% scale.
   const spineX = W / 2;
-  const top = 280;
-  const rowH = 110;
-  const maxLen = 280;
+  const top = 270;
+  const rowH = 130;
+  const maxLen = 320;
+  const barH = 28;
+
+  // Two-line text wrap helper.
+  const wrap = (s, maxChars) => {
+    const words = s.split(' ');
+    const lines = [];
+    let cur = '';
+    for (const w of words) {
+      if ((cur + ' ' + w).trim().length > maxChars) { lines.push(cur.trim()); cur = w; }
+      else cur = (cur + ' ' + w).trim();
+    }
+    if (cur) lines.push(cur);
+    return lines.slice(0, 2);
+  };
 
   return (
     <window.ChartFrame
       eyebrow="THE ASPIRATION / PRACTICE GAP"
       headline="On the left: what they say. On the right: what they do."
-      subtitle="Each pair shares a colored ribbon — the wider the ribbon, the wider the gap."
+      subtitle="Per pair: gray bar shows the share who agree (SAY); blue bar shows the share who actually do it. The gap on the spine is the distance between them."
       caption="Pairs drawn from across the survey · n=550"
       callout="The biggest single gap — 57 percentage points — sits between “we'd benefit from PIRs” and “we operationalize threat intel continuously.” That's the report's central tension in two numbers."
       width={W}
       height={H}
     >
       {/* Spine */}
-      <line x1={spineX} y1={top - 20} x2={spineX} y2={top + pairs.length * rowH}
-            stroke={P.inkSubtle} strokeWidth="2" />
+      <line x1={spineX} y1={top - 16} x2={spineX} y2={top + pairs.length * rowH - 12}
+            stroke={P.inkSubtle} strokeWidth="1.5" />
 
-      {/* Side labels */}
-      <text x={spineX - 12} y={top - 28} fontSize="11" fill={P.inkSoft}
-            fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1" textAnchor="end">
+      {/* Top headers */}
+      <text x={spineX - 16} y={top - 28} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+            fontWeight="500" letterSpacing="1" textAnchor="end">
         ← WHAT THEY SAY
       </text>
-      <text x={spineX + 12} y={top - 28} fontSize="11" fill={P.blue}
-            fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1">
+      <text x={spineX + 16} y={top - 28} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.blue}
+            fontWeight="500" letterSpacing="1">
         WHAT THEY DO →
       </text>
 
       {pairs.map((p, i) => {
-        const yc = top + i * rowH + rowH / 2;
+        const yc = top + i * rowH + 40;
         const sayW = (p.say.pct / 100) * maxLen;
-        const doW = (p.do_.pct / 100) * maxLen;
+        const doW  = (p.do_.pct  / 100) * maxLen;
         const gap = p.say.pct - p.do_.pct;
-        const ribbonY = yc - 38;
-        const ribbonH = 76;
+        const sayLines = wrap(p.say.label, 36);
+        const doLines  = wrap(p.do_.label, 36);
 
         return (
           <g key={p.key}>
-            {/* Ribbon — quadrilateral connecting left bar end to right bar end */}
-            <path d={`M ${spineX - sayW} ${ribbonY}
-                     L ${spineX + doW} ${ribbonY}
-                     L ${spineX + doW} ${ribbonY + ribbonH}
-                     L ${spineX - sayW} ${ribbonY + ribbonH} Z`}
-                  fill={P.accentTint} opacity="0.7" />
+            {/* Topic name above the row, centered on the spine */}
+            <text x={spineX} y={yc - 16} fontSize="14"
+                  fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                  fontWeight="500" textAnchor="middle">{topicFor[p.key] || p.key}</text>
 
-            {/* Aspiration bar */}
-            <rect x={spineX - sayW} y={yc - 16} width={sayW} height={32}
+            {/* Aspiration bar — extends left from spine */}
+            <rect x={spineX - sayW} y={yc} width={sayW} height={barH}
                   fill={P.inkSubtle} rx="0" />
-            <text fontFamily={window.FIL_FONT_DISPLAY} x={spineX - sayW - 12} y={yc + 8} fontSize="22"
-                  fill={P.inkSoft} fontWeight="300" textAnchor="end">{p.say.pct}%</text>
+            <text x={spineX - sayW - 12} y={yc + 21} fontSize="22"
+                  fontFamily={window.FIL_FONT_DISPLAY} fill={P.inkSoft}
+                  fontWeight="300" style={{ letterSpacing: '-0.02em' }}
+                  textAnchor="end">{p.say.pct}%</text>
 
-            {/* Practice bar */}
-            <rect x={spineX} y={yc - 16} width={doW} height={32}
+            {/* Practice bar — extends right from spine */}
+            <rect x={spineX} y={yc} width={doW} height={barH}
                   fill={P.blue} rx="0" />
-            <text fontFamily={window.FIL_FONT_DISPLAY} x={spineX + doW + 12} y={yc + 8} fontSize="22"
-                  fill={P.blue} fontWeight="300">{p.do_.pct}%</text>
+            <text x={spineX + doW + 12} y={yc + 21} fontSize="22"
+                  fontFamily={window.FIL_FONT_DISPLAY} fill={P.blue}
+                  fontWeight="300" style={{ letterSpacing: '-0.02em' }}>{p.do_.pct}%</text>
 
-            {/* Gap badge centered */}
-            <rect x={spineX - 36} y={yc - 14} width={72} height={28}
-                  fill={P.accent} rx="0" />
-            <text x={spineX} y={yc + 6} fontSize="14" fill={P.paper}
-                  fontWeight="600" textAnchor="middle">−{gap}pp</text>
+            {/* Gap label — sits ABOVE the spine (in the topic-name band) to
+                avoid overlapping the bars themselves. Aligned right beneath
+                the topic name. */}
+            <text x={spineX} y={yc + 21} fontSize="13"
+                  fontFamily={window.FIL_FONT_MONO} fill={P.paper}
+                  fontWeight="500" textAnchor="middle"
+                  style={{ paintOrder: 'stroke', stroke: P.accent, strokeWidth: 12, strokeLinejoin: 'round' }}>
+              −{gap}pp
+            </text>
 
-            {/* Side labels — wrapped across two lines so 60-char survey
-                statements don't crash into each other across the spine. */}
-            {(() => {
-              const wrap = (s, maxChars) => {
-                if (s.length <= maxChars) return [s, ''];
-                // Break on the last space inside maxChars; ellipsis the rest.
-                const head = s.slice(0, maxChars);
-                const cut = head.lastIndexOf(' ');
-                const a = (cut > maxChars * 0.5 ? head.slice(0, cut) : head).trim();
-                const rest = s.slice(a.length).trim();
-                const tail = rest.length <= maxChars ? rest : rest.slice(0, maxChars - 1).trim() + '…';
-                return [a, tail];
-              };
-              const [sayA, sayB] = wrap(p.say.label, 40);
-              const [doA, doB]   = wrap(p.do_.label, 40);
-              const lx = spineX - maxLen - 16;
-              const rx = spineX + maxLen + 16;
-              return (
-                <g>
-                  <text x={lx} y={yc - 32} fontSize="11"
-                        fill={P.inkSoft} fontWeight="500" textAnchor="start">
-                    <tspan x={lx} dy="0">{sayA}</tspan>
-                    {sayB && <tspan x={lx} dy="14">{sayB}</tspan>}
-                  </text>
-                  <text x={rx} y={yc - 32} fontSize="11"
-                        fill={P.ink} fontWeight="600" textAnchor="end">
-                    <tspan x={rx} dy="0">{doA}</tspan>
-                    {doB && <tspan x={rx} dy="14">{doB}</tspan>}
-                  </text>
-                </g>
-              );
-            })()}
-            <text x={spineX - maxLen - 16} y={yc + 44} fontSize="10"
-                  fill={P.inkSubtle} letterSpacing="1">{p.say.source}</text>
-            <text x={spineX + maxLen + 16} y={yc + 44} fontSize="10"
-                  fill={P.inkSubtle} letterSpacing="1" textAnchor="end">{p.do_.source}</text>
+            {/* Survey statements — short, under the bars on each side */}
+            {sayLines.map((ln, li) => (
+              <text key={`sl-${li}`} x={spineX - 12} y={yc + barH + 16 + li * 14} fontSize="11"
+                    fontFamily={window.FIL_FONT_BODY} fill={P.inkSoft}
+                    fontWeight="400" textAnchor="end">{ln}</text>
+            ))}
+            {doLines.map((ln, li) => (
+              <text key={`dl-${li}`} x={spineX + 12} y={yc + barH + 16 + li * 14} fontSize="11"
+                    fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                    fontWeight="400">{ln}</text>
+            ))}
+
+            {/* Q-tab refs — tiny corner labels at row-bottom edges */}
+            <text x={spineX - maxLen} y={yc + barH + 16 + 2 * 14 + 10} fontSize="10"
+                  fontFamily={window.FIL_FONT_MONO} fill={P.inkSubtle}
+                  fontWeight="400">{p.say.source}</text>
+            <text x={spineX + maxLen} y={yc + barH + 16 + 2 * 14 + 10} fontSize="10"
+                  fontFamily={window.FIL_FONT_MONO} fill={P.inkSubtle}
+                  fontWeight="400" textAnchor="end">{p.do_.source}</text>
           </g>
         );
       })}
