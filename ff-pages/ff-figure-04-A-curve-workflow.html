@@ -710,18 +710,14 @@ function F4ArtboardCurveWorkflow() {
               textAnchor="middle" dy="0">{b}</text>
       ))}
 
-      {/* Labels for each side */}
-      <text x={lx1 - 8} y={ly0 + 14} fontSize="10" fill={P.blue}
-            fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1" textAnchor="end">↑ IN 2028</text>
-      <text x={lx1 - 8} y={ly1 - 4} fontSize="10" fill={P.inkSoft}
-            fontFamily={window.FIL_FONT_MONO} fontWeight="500" letterSpacing="1" textAnchor="end">↓ TODAY</text>
+      {/* Direction eyebrows removed — the "37% mean today" / "59% mean in
+          2028" labels make the up/down semantics explicit on their own. */}
 
-      {/* Mean markers */}
+      {/* Mean markers. Both labels sit on the OUTER edges of the chart (below
+          today's bars, above 2028's bars) so they read as anchors for their
+          respective distribution rather than as a header above the panel. */}
       {(() => {
-        // Where do the means fall along the x axis? Map 0–100% scale to
-        // x-positions of the bucket centers (linearly).
         const meanX = pct => {
-          // Map % to bucket index using bucket midpoints.
           const midpoints = [0, 5.5, 15.5, 25.5, 35.5, 45.5, 55.5, 65.5, 75.5, 85.5, 95, 100];
           for (let i = 0; i < midpoints.length - 1; i++) {
             if (pct >= midpoints[i] && pct < midpoints[i + 1]) {
@@ -734,15 +730,22 @@ function F4ArtboardCurveWorkflow() {
         const tx = meanX(37), fx = meanX(59);
         return (
           <g>
+            {/* Today mean — dashed line through the lower (today) bars,
+                label below the chart. */}
             <line x1={tx} y1={midY} x2={tx} y2={ly1 + 18}
                   stroke={P.ink} strokeWidth="1.5" strokeDasharray="3 4" />
-            <text x={tx} y={ly1 + 34} fontSize="11" fill={P.ink}
-                  fontWeight="700" textAnchor="middle">37% mean today</text>
+            <text x={tx} y={ly1 + 34} fontSize="11"
+                  fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                  fontWeight="500" textAnchor="middle">37% mean today</text>
 
-            <line x1={fx} y1={midY} x2={fx} y2={ly0 - 18}
+            {/* 2028 mean — dashed line through the upper (2028) bars; label
+                sits INSIDE the plot near the top so it reads as a mark on
+                the chart rather than a header above the panel. */}
+            <line x1={fx} y1={midY} x2={fx} y2={ly0 + 32}
                   stroke={P.blue} strokeWidth="1.5" strokeDasharray="3 4" />
-            <text x={fx} y={ly0 - 24} fontSize="11" fill={P.blue}
-                  fontWeight="700" textAnchor="middle">59% mean in 2028</text>
+            <text x={fx} y={ly0 + 22} fontSize="11"
+                  fontFamily={window.FIL_FONT_BODY} fill={P.blue}
+                  fontWeight="500" textAnchor="middle">59% mean in 2028</text>
           </g>
         );
       })()}
@@ -753,7 +756,10 @@ function F4ArtboardCurveWorkflow() {
             stroke={P.blueLight} strokeWidth="2" />
       {stations.map((s, i) => {
         const y = ry0 + i * stationStep;
-        const barW = 200 * (s.total / 65);
+        // Honest 0–100% scale. The light-blue track represents 100%; the
+        // filled blue bar shows the actual %. Previously /65 made a 59%
+        // bar fill 91% of the track — misleading.
+        const barW = 200 * (s.total / 100);
         return (
           <g key={s.key}>
             {/* Node dot */}
