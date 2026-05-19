@@ -430,12 +430,26 @@ const F1_PALETTE = {
   blueMid:    '#3B82F6',
   blueLight:  '#BFDBFE',
   blueTint:   '#EFF4FF',
-  orange:     '#F26C2C',  // "Pause on this" accent
-  orangeTint: '#FEEFE4',
+  // FinalFinal accent — used sparingly for the editorial "left behind" / "decline"
+  // story in the slope and gap-bar charts. Replaces the prior orange #F26C2C.
+  // `orange` is kept as an alias so older refs keep working.
+  accent:     '#DA3832',
+  accentTint: '#FEEBEA',
+  orange:     '#DA3832',
+  orangeTint: '#FEEBEA',
   paper:      '#FFFFFF',
 };
 
-const F1_FONT = `'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+// FF type stack — three roles, applied selectively per text element:
+//   DISPLAY  — Plus Jakarta Sans Light. Big numerical headlines inside the
+//              chart (the "41%", the "+22"). The FF signature.
+//   BODY     — Inter. Standard chart labels (tool names, legend body).
+//   MONO     — IBM Plex Mono. Eyebrows, tick labels, captions, anything
+//              tracked or uppercase.
+const F1_FONT          = `'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+const F1_FONT_BODY     = F1_FONT;
+const F1_FONT_DISPLAY  = `'Plus Jakarta Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+const F1_FONT_MONO     = `'IBM Plex Mono', 'Courier New', monospace`;
 
 // Survey data. Tools used to assess cyber risk exposure (Q6, multi-select).
 // "kind" tags the continuous/posture-vs-periodic story for color encoding.
@@ -533,7 +547,10 @@ function F1_ChartFrame({ eyebrow, headline, subtitle, caption, callout, children
   );
 }
 
-Object.assign(window, { F1_PALETTE, F1_FONT, F1_TOOLS, F1_ChartFrame });
+Object.assign(window, {
+  F1_PALETTE, F1_FONT, F1_FONT_BODY, F1_FONT_DISPLAY, F1_FONT_MONO,
+  F1_TOOLS, F1_ChartFrame,
+});
 
   </script>
 
@@ -567,11 +584,13 @@ function F1ArtboardGapBars() {
   const journeyX = 340;        // left-edge of journey column (axisX-side)
   const journeyXRight = 340;   // mirrored — we'll just compute per-row
 
-  // Visual threshold for "essentially flat".
+  // Visual threshold for "essentially flat". Blue = adopted on the journey;
+  // FF accent (red) = left behind. Restraint: only the directional bars get
+  // color; flats stay grey.
   const flatColor = window.F1_PALETTE.inkSubtle;
   const colorFor = d => {
     if (d > 3) return window.F1_PALETTE.blue;
-    if (d < -3) return window.F1_PALETTE.orange;
+    if (d < -3) return window.F1_PALETTE.accent;
     return flatColor;
   };
 
@@ -588,13 +607,15 @@ function F1ArtboardGapBars() {
       width={W}
       height={H}
     >
-      {/* Axis headers — split the read into two halves. */}
-      <text x={axisX - 16} y={244} fontSize="11" fill={window.F1_PALETTE.orange}
-            fontWeight="700" letterSpacing="2" textAnchor="end">
+      {/* Axis headers — IBM Plex Mono, light tracking. */}
+      <text x={axisX - 16} y={244} fontSize="11"
+            fontFamily={window.F1_FONT_MONO} fill={window.F1_PALETTE.accent}
+            fontWeight="500" letterSpacing="1" textAnchor="end">
         ← PLANNING USES MORE
       </text>
-      <text x={axisX + 16} y={244} fontSize="11" fill={window.F1_PALETTE.blue}
-            fontWeight="700" letterSpacing="2" textAnchor="start">
+      <text x={axisX + 16} y={244} fontSize="11"
+            fontFamily={window.F1_FONT_MONO} fill={window.F1_PALETTE.blue}
+            fontWeight="500" letterSpacing="1" textAnchor="start">
         MATURE USES MORE →
       </text>
 
@@ -610,11 +631,11 @@ function F1ArtboardGapBars() {
                 stroke={window.F1_PALETTE.ruleSoft} strokeWidth="1"
                 strokeDasharray="2 4" />
           <text x={axisX - g * ppToPx} y={top - 14} fontSize="10"
-                fill={window.F1_PALETTE.inkSubtle} fontWeight="500"
-                textAnchor="middle">−{g}pp</text>
+                fontFamily={window.F1_FONT_MONO} fill={window.F1_PALETTE.inkSubtle}
+                fontWeight="400" textAnchor="middle">−{g}pp</text>
           <text x={axisX + g * ppToPx} y={top - 14} fontSize="10"
-                fill={window.F1_PALETTE.inkSubtle} fontWeight="500"
-                textAnchor="middle">+{g}pp</text>
+                fontFamily={window.F1_FONT_MONO} fill={window.F1_PALETTE.inkSubtle}
+                fontWeight="400" textAnchor="middle">+{g}pp</text>
         </g>
       ))}
 
@@ -653,35 +674,40 @@ function F1ArtboardGapBars() {
                     opacity="0.25" />
             )}
 
-            {/* Tool name — right-anchored toward the bar column */}
-            <text x={labelX} y={yCenter + 5} fontSize="15"
-                  fill={window.F1_PALETTE.ink} fontWeight="600"
+            {/* Tool name — Inter medium */}
+            <text x={labelX} y={yCenter + 5} fontSize="16"
+                  fontFamily={window.F1_FONT_BODY}
+                  fill={window.F1_PALETTE.ink} fontWeight="500"
                   textAnchor="end">{t.short}</text>
 
-            {/* Rank chip — small leading numeral (1..9) helps eye scan */}
-            <text x={120} y={yCenter + 5} fontSize="13"
-                  fill={window.F1_PALETTE.inkSubtle} fontWeight="700"
-                  letterSpacing="1">#{i + 1}</text>
+            {/* Rank chip — small leading numeral (1..9) in IBM Plex Mono */}
+            <text x={120} y={yCenter + 5} fontSize="12"
+                  fontFamily={window.F1_FONT_MONO}
+                  fill={window.F1_PALETTE.inkSubtle} fontWeight="400"
+                  letterSpacing="0">#{i + 1}</text>
 
-            {/* The bar itself */}
+            {/* The bar itself — sharp corners per FF (rx=0). */}
             {flat ? (
               // For ~flat rows, draw a tiny dot on the axis instead of a bar.
               <circle cx={axisX} cy={yCenter} r="5" fill={flatColor} />
             ) : (
               <rect x={barX} y={yBar} width={barLen} height={barH}
-                    fill={color} rx="3" />
+                    fill={color} rx="0" />
             )}
 
-            {/* Delta number (the dominant numeric for the row) */}
-            <text x={deltaX} y={yCenter + 7} fontSize="20"
-                  fill={color} fontWeight="800"
+            {/* Delta number — Plus Jakarta Sans Light, the FF signature display. */}
+            <text x={deltaX} y={yCenter + 9} fontSize="28"
+                  fontFamily={window.F1_FONT_DISPLAY}
+                  fill={color} fontWeight="300"
+                  style={{ letterSpacing: '-0.02em' }}
                   textAnchor={deltaAnchor}>
               {flat ? `${t.delta > 0 ? '+' : t.delta < 0 ? '−' : ''}${Math.abs(t.delta)}pp` : `${deltaText}pp`}
             </text>
 
-            {/* Journey label — values themselves on the opposite gutter */}
-            <text x={journeyTextX} y={yCenter + 5} fontSize="12"
-                  fill={window.F1_PALETTE.inkSoft} fontWeight="500"
+            {/* Journey label — Inter, on the opposite gutter from the bar */}
+            <text x={journeyTextX} y={yCenter + 5} fontSize="13"
+                  fontFamily={window.F1_FONT_BODY}
+                  fill={window.F1_PALETTE.inkSoft} fontWeight="400"
                   textAnchor={journeyAnchor}>
               {t.planning}% → {t.mature}%
             </text>
@@ -713,15 +739,18 @@ function F1ArtboardGapBars() {
         return elems;
       })()}
 
-      {/* Mini side-eyebrows on the far right */}
-      <text x={1128} y={top + 4 * rowH - 14} fontSize="9"
-            fill={window.F1_PALETTE.blue} fontWeight="700" letterSpacing="2"
+      {/* Mini side-eyebrows on the far right — IBM Plex Mono */}
+      <text x={1128} y={top + 4 * rowH - 14} fontSize="10"
+            fontFamily={window.F1_FONT_MONO} fill={window.F1_PALETTE.blue}
+            fontWeight="500" letterSpacing="1"
             textAnchor="end">ADOPTED ON THE JOURNEY ↑</text>
-      <text x={1128} y={top + 5 * rowH + 4} fontSize="9"
-            fill={window.F1_PALETTE.inkSubtle} fontWeight="700" letterSpacing="2"
+      <text x={1128} y={top + 5 * rowH + 4} fontSize="10"
+            fontFamily={window.F1_FONT_MONO} fill={window.F1_PALETTE.inkSubtle}
+            fontWeight="500" letterSpacing="1"
             textAnchor="end">— ROUGHLY UNCHANGED —</text>
-      <text x={1128} y={top + 5 * rowH + 24} fontSize="9"
-            fill={window.F1_PALETTE.orange} fontWeight="700" letterSpacing="2"
+      <text x={1128} y={top + 5 * rowH + 24} fontSize="10"
+            fontFamily={window.F1_FONT_MONO} fill={window.F1_PALETTE.accent}
+            fontWeight="500" letterSpacing="1"
             textAnchor="end">LEFT BEHIND ↓</text>
     </window.F1_ChartFrame>
   );

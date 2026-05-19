@@ -430,12 +430,26 @@ const F1_PALETTE = {
   blueMid:    '#3B82F6',
   blueLight:  '#BFDBFE',
   blueTint:   '#EFF4FF',
-  orange:     '#F26C2C',  // "Pause on this" accent
-  orangeTint: '#FEEFE4',
+  // FinalFinal accent — used sparingly for the editorial "left behind" / "decline"
+  // story in the slope and gap-bar charts. Replaces the prior orange #F26C2C.
+  // `orange` is kept as an alias so older refs keep working.
+  accent:     '#DA3832',
+  accentTint: '#FEEBEA',
+  orange:     '#DA3832',
+  orangeTint: '#FEEBEA',
   paper:      '#FFFFFF',
 };
 
-const F1_FONT = `'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+// FF type stack — three roles, applied selectively per text element:
+//   DISPLAY  — Plus Jakarta Sans Light. Big numerical headlines inside the
+//              chart (the "41%", the "+22"). The FF signature.
+//   BODY     — Inter. Standard chart labels (tool names, legend body).
+//   MONO     — IBM Plex Mono. Eyebrows, tick labels, captions, anything
+//              tracked or uppercase.
+const F1_FONT          = `'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+const F1_FONT_BODY     = F1_FONT;
+const F1_FONT_DISPLAY  = `'Plus Jakarta Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+const F1_FONT_MONO     = `'IBM Plex Mono', 'Courier New', monospace`;
 
 // Survey data. Tools used to assess cyber risk exposure (Q6, multi-select).
 // "kind" tags the continuous/posture-vs-periodic story for color encoding.
@@ -533,7 +547,10 @@ function F1_ChartFrame({ eyebrow, headline, subtitle, caption, callout, children
   );
 }
 
-Object.assign(window, { F1_PALETTE, F1_FONT, F1_TOOLS, F1_ChartFrame });
+Object.assign(window, {
+  F1_PALETTE, F1_FONT, F1_FONT_BODY, F1_FONT_DISPLAY, F1_FONT_MONO,
+  F1_TOOLS, F1_ChartFrame,
+});
 
   </script>
 
@@ -703,61 +720,80 @@ function F1ArtboardBubblePack() {
           <g key={t.key}>
             <circle cx={t.x} cy={t.y} r={t.r} fill={fill} />
             <text x={t.x} y={t.y + labelDy} fontSize={labelSize}
-                  fill={textColor} fontWeight="600" textAnchor="middle">
+                  fontFamily={window.F1_FONT_BODY}
+                  fill={textColor} fontWeight="500" textAnchor="middle">
               {t.short}
             </text>
             <text x={t.x} y={t.y + pctDy} fontSize={pctSize}
-                  fill={pctColor} fontWeight="800" textAnchor="middle">
+                  fontFamily={window.F1_FONT_DISPLAY}
+                  fill={pctColor} fontWeight="300" textAnchor="middle"
+                  style={{ letterSpacing: '-0.02em' }}>
               {t.total}%
             </text>
           </g>
         );
       })}
 
-      {/* Right-rail legend */}
+      {/* Right-rail legend — FF type stack: mono eyebrows, Inter body,
+          Plus Jakarta Sans for the headline numeric. */}
       <g>
-        <text x={legendX} y={258} fontSize="10" fill={window.F1_PALETTE.inkSoft}
-              fontWeight="700" letterSpacing="2">HOW TO READ</text>
+        <text x={legendX} y={258} fontSize="11"
+              fontFamily={window.F1_FONT_MONO} fill={window.F1_PALETTE.inkSoft}
+              fontWeight="500" letterSpacing="1">HOW TO READ</text>
         <line x1={legendX} y1={268} x2={1128} y2={268}
               stroke={window.F1_PALETTE.rule} />
-        <text x={legendX} y={294} fontSize="12" fill={window.F1_PALETTE.ink}
-              fontWeight="600">Bubble area</text>
-        <text x={legendX} y={314} fontSize="12" fill={window.F1_PALETTE.inkSoft}>
-          = share of organizations using the tool
+        <text x={legendX} y={294} fontSize="13"
+              fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.ink}
+              fontWeight="500">Bubble area</text>
+        <text x={legendX} y={314} fontSize="13"
+              fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.inkSoft}>
+          = share of orgs using the tool
         </text>
 
-        <circle cx={legendX + 8} cy={356} r="9" fill={window.F1_PALETTE.blue} />
-        <text x={legendX + 28} y={361} fontSize="12" fill={window.F1_PALETTE.ink}
-              fontWeight="500">Continuous & posture tools</text>
-        <circle cx={legendX + 8} cy={384} r="9" fill={window.F1_PALETTE.blueLight} />
-        <text x={legendX + 28} y={389} fontSize="12" fill={window.F1_PALETTE.ink}
-              fontWeight="500">Periodic & point-in-time tools</text>
+        <circle cx={legendX + 8} cy={356} r="8" fill={window.F1_PALETTE.blue} />
+        <text x={legendX + 28} y={360} fontSize="13"
+              fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.ink}
+              fontWeight="400">Continuous &amp; posture tools</text>
+        <circle cx={legendX + 8} cy={384} r="8" fill={window.F1_PALETTE.blueLight} />
+        <text x={legendX + 28} y={388} fontSize="13"
+              fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.ink}
+              fontWeight="400">Periodic &amp; point-in-time tools</text>
 
-        <text x={legendX} y={444} fontSize="10" fill={window.F1_PALETTE.inkSoft}
-              fontWeight="700" letterSpacing="2">FRAGMENTATION</text>
-        <line x1={legendX} y1={454} x2={1128} y2={454}
+        <text x={legendX} y={446} fontSize="11"
+              fontFamily={window.F1_FONT_MONO} fill={window.F1_PALETTE.inkSoft}
+              fontWeight="500" letterSpacing="1">FRAGMENTATION</text>
+        <line x1={legendX} y1={456} x2={1128} y2={456}
               stroke={window.F1_PALETTE.rule} />
-        <text x={legendX} y={486} fontSize="44" fill={window.F1_PALETTE.blue}
-              fontWeight="800">41%</text>
-        <text x={legendX} y={508} fontSize="12" fill={window.F1_PALETTE.inkSoft}
-              fontWeight="500">have a fully consolidated view</text>
-        <text x={legendX} y={524} fontSize="12" fill={window.F1_PALETTE.inkSoft}
-              fontWeight="500">of cyber risk exposure</text>
+        <text x={legendX} y={508} fontSize="60"
+              fontFamily={window.F1_FONT_DISPLAY} fill={window.F1_PALETTE.ink}
+              fontWeight="300"
+              style={{ letterSpacing: '-0.02em' }}>41%</text>
+        <text x={legendX} y={538} fontSize="13"
+              fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.inkSoft}
+              fontWeight="400">have a fully consolidated view</text>
+        <text x={legendX} y={556} fontSize="13"
+              fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.inkSoft}
+              fontWeight="400">of cyber risk exposure</text>
 
-        <text x={legendX} y={580} fontSize="10" fill={window.F1_PALETTE.inkSoft}
-              fontWeight="700" letterSpacing="2">MIX SHIFT WITH MATURITY</text>
-        <line x1={legendX} y1={590} x2={1128} y2={590}
+        <text x={legendX} y={610} fontSize="11"
+              fontFamily={window.F1_FONT_MONO} fill={window.F1_PALETTE.inkSoft}
+              fontWeight="500" letterSpacing="1">MIX SHIFT WITH MATURITY</text>
+        <line x1={legendX} y1={620} x2={1128} y2={620}
               stroke={window.F1_PALETTE.rule} />
-        <text x={legendX} y={614} fontSize="11" fill={window.F1_PALETTE.inkSoft}>
-          Most over-indexed by mature CTEM:
+        <text x={legendX} y={644} fontSize="12"
+              fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.inkSoft}>
+          Most over-indexed by Mature CTEM
         </text>
-        <text x={legendX} y={634} fontSize="12" fill={window.F1_PALETTE.ink}
-              fontWeight="600">GRC +22 · CSPM +21 · BAS +14</text>
-        <text x={legendX} y={664} fontSize="11" fill={window.F1_PALETTE.inkSoft}>
-          Most over-indexed by planning CTEM:
+        <text x={legendX} y={664} fontSize="13"
+              fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.ink}
+              fontWeight="500">GRC +22 &nbsp;·&nbsp; CSPM +21 &nbsp;·&nbsp; BAS +14</text>
+        <text x={legendX} y={696} fontSize="12"
+              fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.inkSoft}>
+          Most over-indexed by Planning CTEM
         </text>
-        <text x={legendX} y={684} fontSize="12" fill={window.F1_PALETTE.ink}
-              fontWeight="600">Pen test +27 · Vuln scan +15 · TI feeds +15</text>
+        <text x={legendX} y={716} fontSize="13"
+              fontFamily={window.F1_FONT_BODY} fill={window.F1_PALETTE.ink}
+              fontWeight="500">Pen test +27 &nbsp;·&nbsp; Vuln scan +15 &nbsp;·&nbsp; TI feeds +15</text>
       </g>
     </window.F1_ChartFrame>
   );
