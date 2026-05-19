@@ -6,7 +6,7 @@
   <title>Bonus 6 · C · Diverging ribbons — Filigran × FinalFinal</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
 :root {
   --ff-bg: #f7f7f7;
@@ -15,7 +15,7 @@
   --ff-text-muted: #666666;
   --ff-accent: #DA3832;
   --ff-divider: rgba(34, 34, 34, 0.2);
-  --ff-font-display: "Plus Jakarta Sans", "Helvetica Neue", Arial, sans-serif;
+  --ff-font-display: "Aeonik Light", "IBM Plex Sans", "Helvetica Neue", Arial, sans-serif;
   --ff-font-body:    "Inter", system-ui, sans-serif;
   --ff-font-mono:    "IBM Plex Mono", "Courier New", monospace;
 }
@@ -432,14 +432,26 @@ const FIL_PALETTE = {
   blueMid:    '#3B82F6',
   blueLight:  '#BFDBFE',
   blueTint:   '#EFF4FF',
-  orange:     '#F26C2C',  // "Pause on this" accent — used sparingly
-  orangeTint: '#FEEFE4',
+  // FinalFinal accent — used sparingly for editorial emphasis. `orange` is
+  // kept as an alias so older artboard refs keep working unchanged.
+  accent:     '#DA3832',
+  accentTint: '#FEEBEA',
+  orange:     '#DA3832',
+  orangeTint: '#FEEBEA',
   good:       '#0E9F6E',  // secondary accent (leader indicator)
   goodTint:   '#D1FAE5',
   paper:      '#FFFFFF',
 };
 
-const FIL_FONT = `'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+// FF type stack — three roles, applied selectively per text element.
+//   DISPLAY  — IBM Plex Sans Light. Big numerical headlines (the "97%",
+//              the "+12pp" callouts). FF signature.
+//   BODY     — Inter. Standard chart labels.
+//   MONO     — IBM Plex Mono. Eyebrows, tick labels, mono captions.
+const FIL_FONT         = `'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+const FIL_FONT_BODY    = FIL_FONT;
+const FIL_FONT_DISPLAY = `'Aeonik Light', 'IBM Plex Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif`;
+const FIL_FONT_MONO    = `'IBM Plex Mono', 'Courier New', monospace`;
 
 // ChartFrame — every artboard wraps its chart in this. Eyebrow → headline →
 // subtitle → caption sit above; an orange "PAUSE ON THIS" callout and a
@@ -535,7 +547,10 @@ function FrameLegendSection({ x, y, w = 208, title, children }) {
   );
 }
 
-Object.assign(window, { FIL_PALETTE, FIL_FONT, ChartFrame, FrameLegendSection });
+Object.assign(window, {
+  FIL_PALETTE, FIL_FONT, FIL_FONT_BODY, FIL_FONT_DISPLAY, FIL_FONT_MONO,
+  ChartFrame, FrameLegendSection,
+});
 
   </script>
   <script type="text/babel" data-presets="react">
