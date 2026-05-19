@@ -379,12 +379,12 @@ a { color: inherit; }
   <main class="ff-page">
     <p class="ff-eyebrow">THE ASPIRATION / PRACTICE GAP</p>
     <h1 class="ff-headline">Belief is above the line. Practice is below it.</h1>
-    <p class="ff-subtitle">Each pair plotted by what organizations say (x) and what they actually do (y). The diagonal is parity.</p>
+    <p class="ff-subtitle">Each pair plotted by what organizations say (x) and what they actually do (y). The diagonal is parity — same value on both axes.</p>
     <p class="ff-caption">Pairs drawn from across the survey · n=550</p>
 
     <aside class="ff-report" aria-label="Where this chart maps in the whitepaper"><div class="ff-report__row"><span class="ff-report__label">Report section</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">Synthesis across &quot;Exposure gap&quot;, &quot;Prioritization&quot;, &quot;Validate&quot;, and &quot;AI&quot; sections</a></span></div><div class="ff-report__row"><span class="ff-report__label">Whitepaper figure</span><span class="ff-report__value"><span style="color: var(--ff-text-muted);">— not a numbered figure —</span></span><span class="ff-report__fit ff-report__fit--unnumbered">Not a numbered figure</span></div><p class="ff-report__note">Not a whitepaper figure. Same pairs as 6A, plotted against a Say/Do parity diagonal.</p></aside>
 
-    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 539"></div></div>
+    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 568"></div></div>
 
     <div class="ff-callout">
       <div class="ff-callout__bar" aria-hidden="true"></div>
@@ -414,7 +414,7 @@ a { color: inherit; }
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 245 1200 539";</script>
+  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 216 1200 568";</script>
 
   <script type="text/babel" data-presets="react">
 // shared/frame.jsx
@@ -599,30 +599,51 @@ Object.assign(window, { B6_PAIRS });
   </script>
 
   <script type="text/babel" data-presets="react">
-// Artboard B — Quadrant of "say vs do".
+// Artboard B — Belief × practice quadrant.
 // Each of the four pairs is one dot positioned at (% who say it matters, % who
-// actually do it). The diagonal is the parity line: dots ON the diagonal mean
-// belief and practice are aligned. Dots BELOW the diagonal expose the gap —
-// the further below, the wider. All four pairs in this dataset sit
-// dramatically below.
+// actually do it). The diagonal is the parity line (y=x): dots ON it mean
+// belief and practice are aligned. Dots BELOW the diagonal expose the gap.
+// X-axis is tightly zoomed on the SAY range (80-100%) because all pairs sit
+// in that band; without that, the dots bunch in 5% of the plot.
 
 function B6ArtboardQuadrant() {
   const W = 1200, H = 900;
   const P = window.FIL_PALETTE;
   const pairs = window.B6_PAIRS;
 
+  // Short topic names per pair — drives the readable label next to each
+  // practice dot (replaces the cryptic "Q4_1 → Q8_1" form).
+  const topicFor = {
+    periodic: 'Periodic vs manual assessment',
+    pirs:     'PIRs vs continuous TI',
+    known:    'Known risks vs dead-end time',
+    validate: 'Validation difficulty vs effective TI',
+  };
+
   // Plot rect.
-  const x0 = 170, x1 = 1040;
-  const y0 = 270, y1 = 720;
-  const dom = [30, 100];
-  const xFor = v => x0 + (v - dom[0]) / (dom[1] - dom[0]) * (x1 - x0);
-  const yFor = v => y1 - (v - dom[0]) / (dom[1] - dom[0]) * (y1 - y0);
+  const x0 = 200, x1 = 1040;
+  const y0 = 230, y1 = 720;
+
+  // Tight X domain so the data spreads across the chart; Y stays wide since
+  // DO values run 38-85%.
+  const xDom = [80, 100];
+  const yDom = [30, 100];
+  const xFor = v => x0 + (v - xDom[0]) / (xDom[1] - xDom[0]) * (x1 - x0);
+  const yFor = v => y1 - (v - yDom[0]) / (yDom[1] - yDom[0]) * (y1 - y0);
+
+  // Per-pair label placement — pick a side so labels don't collide.
+  const labelSide = {
+    periodic: 'right',  // 88/85, near diagonal, label right
+    pirs:     'right',  // 95/38, big drop, label right of practice dot
+    known:    'left',   // 84/42, leftmost dot
+    validate: 'left',   // 97/47, label on the left so it doesn't crash into the right edge
+  };
 
   return (
     <window.ChartFrame
       eyebrow="THE ASPIRATION / PRACTICE GAP"
       headline="Belief is above the line. Practice is below it."
-      subtitle="Each pair plotted by what organizations say (x) and what they actually do (y). The diagonal is parity."
+      subtitle="Each pair plotted by what organizations say (x) and what they actually do (y). The diagonal is parity — same value on both axes."
       caption="Pairs drawn from across the survey · n=550"
       callout="All four pairs sit below the parity line. The gap between “we believe this matters” and “we do this” is the work the report is about."
       width={W}
@@ -630,99 +651,101 @@ function B6ArtboardQuadrant() {
     >
       {/* Plot frame */}
       <rect x={x0} y={y0} width={x1 - x0} height={y1 - y0}
-            fill={P.blueTint} opacity="0.3" />
+            fill={P.blueTint} opacity="0.25" />
 
-      {/* Parity diagonal */}
-      <line x1={xFor(30)} y1={yFor(30)} x2={xFor(100)} y2={yFor(100)}
-            stroke={P.inkSoft} strokeWidth="2" />
-      <text x={xFor(100) - 8} y={yFor(100) - 4} fontSize="11"
-            fill={P.inkSoft} fontWeight="700" textAnchor="end"
-            transform={`rotate(-43, ${xFor(100) - 8}, ${yFor(100) - 4})`}>
-        Belief = practice
-      </text>
+      {/* Parity diagonal — only meaningful within the SAY range, so the line
+          starts at (xFor(80), yFor(80)) and ends at (xFor(100), yFor(100)). */}
+      <line x1={xFor(80)} y1={yFor(80)} x2={xFor(100)} y2={yFor(100)}
+            stroke={P.inkSubtle} strokeWidth="2" strokeDasharray="5 5" />
 
       {/* Axes */}
       <line x1={x0} y1={y1} x2={x1} y2={y1} stroke={P.inkSubtle} />
       <line x1={x0} y1={y0} x2={x0} y2={y1} stroke={P.inkSubtle} />
 
-      {/* Ticks */}
-      {[30, 40, 50, 60, 70, 80, 90, 100].map(t => (
+      {/* X ticks — 5% intervals across the zoomed band */}
+      {[80, 85, 90, 95, 100].map(t => (
         <g key={`xt-${t}`}>
           <line x1={xFor(t)} y1={y1} x2={xFor(t)} y2={y1 + 5}
                 stroke={P.inkSubtle} />
-          <text x={xFor(t)} y={y1 + 22} fontSize="11" fill={P.inkSoft}
-                textAnchor="middle">{t}%</text>
+          <text x={xFor(t)} y={y1 + 22} fontSize="11"
+                fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+                fontWeight="400" textAnchor="middle">{t}%</text>
+        </g>
+      ))}
+
+      {/* Y ticks — wider range */}
+      {[30, 40, 50, 60, 70, 80, 90, 100].map(t => (
+        <g key={`yt-${t}`}>
           <line x1={x0 - 5} y1={yFor(t)} x2={x0} y2={yFor(t)}
                 stroke={P.inkSubtle} />
-          <text x={x0 - 10} y={yFor(t) + 4} fontSize="11" fill={P.inkSoft}
-                textAnchor="end">{t}%</text>
+          <text x={x0 - 10} y={yFor(t) + 4} fontSize="11"
+                fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+                fontWeight="400" textAnchor="end">{t}%</text>
         </g>
       ))}
 
       {/* Axis labels */}
-      <text x={(x0 + x1) / 2} y={y1 + 52} fontSize="11" fill={P.inkSoft}
-            fontWeight="600" letterSpacing="2" textAnchor="middle">
+      <text x={(x0 + x1) / 2} y={y1 + 52} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+            fontWeight="500" letterSpacing="1" textAnchor="middle">
         SAY · % WHO AGREE IT MATTERS →
       </text>
-      <text x={x0 - 80} y={(y0 + y1) / 2} fontSize="11" fill={P.inkSoft}
-            fontWeight="600" letterSpacing="2" textAnchor="middle"
+      <text x={x0 - 80} y={(y0 + y1) / 2} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+            fontWeight="500" letterSpacing="1" textAnchor="middle"
             transform={`rotate(-90, ${x0 - 80}, ${(y0 + y1) / 2})`}>
         DO · % WHO ACTUALLY DO IT →
       </text>
 
-      {/* Region annotations — placed outside the plot rect so they don't
-          crash into the 97% parity tick that sits in the top-right corner or
-          the topic labels that hang below each practice dot. */}
-      <text x={x1} y={y0 - 8} fontSize="10" fill={P.good}
-            fontWeight="700" letterSpacing="2" textAnchor="end">
-        WALKING THE TALK ↑
-      </text>
-      <text x={x0} y={y1 + 38} fontSize="10" fill={P.orange}
-            fontWeight="700" letterSpacing="2" textAnchor="start">
-        THE GAP IS HERE ↓
+      {/* Region annotation — points at where the gaps live (below the line,
+          on the right where SAY is highest). */}
+      <text x={x1 - 8} y={yFor(85) + 4} fontSize="11"
+            fontFamily={window.FIL_FONT_MONO} fill={P.accent}
+            fontWeight="500" letterSpacing="1" textAnchor="end">
+        ↓ THE GAP IS HERE
       </text>
 
-      {/* Dots */}
-      {pairs.map((p, i) => {
+      {/* Dots, drop lines, and labels */}
+      {pairs.map((p) => {
         const cx = xFor(p.say.pct), cy = yFor(p.do_.pct);
-        const sayCx = xFor(p.say.pct), sayCy = yFor(p.say.pct);
+        const sayCy = yFor(p.say.pct);  // sayCx = cx (same X for both points)
+        const gap = p.say.pct - p.do_.pct;
+        const dotR = 26;
+        const side = labelSide[p.key] || 'right';
+        const lx = side === 'right' ? cx + dotR + 14 : cx - dotR - 14;
+        const lanchor = side === 'right' ? 'start' : 'end';
         return (
           <g key={p.key}>
-            {/* Drop line from parity to actual */}
-            <line x1={sayCx} y1={sayCy} x2={cx} y2={cy}
-                  stroke={P.orange} strokeWidth="2" />
-            {/* Parity tick (open circle) */}
-            <circle cx={sayCx} cy={sayCy} r="7" fill={P.paper}
+            {/* Drop line from parity tick down to the practice dot */}
+            <line x1={cx} y1={sayCy} x2={cx} y2={cy}
+                  stroke={P.accent} strokeWidth="1.5" strokeDasharray="4 4" />
+
+            {/* Parity tick — small open circle on the diagonal, with SAY% */}
+            <circle cx={cx} cy={sayCy} r="6" fill={P.paper}
                     stroke={P.inkSoft} strokeWidth="2" />
-            {/* Practice dot (filled) */}
-            <circle cx={cx} cy={cy} r="12" fill={P.blue}
-                    stroke={P.paper} strokeWidth="3" />
-            {/* Gap label on the LEFT side of the drop line — keeps it clear
-                of the right-side numeric labels, which would otherwise overlap
-                when the gap (and therefore midY) is small. */}
-            {(() => {
-              const midY = (sayCy + cy) / 2;
-              const gap = p.say.pct - p.do_.pct;
-              return (
-                <g>
-                  <rect x={cx - 66} y={midY - 12} width={56} height={22}
-                        fill={P.orange} rx="3" />
-                  <text x={cx - 38} y={midY + 4} fontSize="13"
-                        fill={P.paper} fontWeight="800" textAnchor="middle">
-                    {gap}pp
-                  </text>
-                </g>
-              );
-            })()}
-            {/* Numeric labels — right of the practice dot and parity tick. */}
-            <text x={cx + 24} y={cy + 4} fontSize="18" fill={P.blue}
-                  fontWeight="800" textAnchor="start">{p.do_.pct}%</text>
-            <text x={sayCx + 14} y={sayCy + 4} fontSize="13" fill={P.inkSoft}
-                  fontWeight="700">{p.say.pct}%</text>
-            {/* Topic label below the practice dot */}
-            <text x={cx} y={cy + 36} fontSize="11" fill={P.ink}
-                  fontWeight="700" textAnchor="middle">
-              {p.say.source.split(' ')[0]} → {p.do_.source.split(' ')[0]}
+            <text x={cx} y={sayCy - 14} fontSize="12"
+                  fontFamily={window.FIL_FONT_MONO} fill={P.inkSoft}
+                  fontWeight="500" textAnchor="middle">say {p.say.pct}%</text>
+
+            {/* Gap label — vertically along the drop line, on the right */}
+            <text x={cx + 10} y={(sayCy + cy) / 2 + 4} fontSize="13"
+                  fontFamily={window.FIL_FONT_DISPLAY} fill={P.accent}
+                  fontWeight="500"
+                  style={{ letterSpacing: '-0.02em' }}>−{gap}pp</text>
+
+            {/* Practice dot — big, with the % inside */}
+            <circle cx={cx} cy={cy} r={dotR} fill={P.blue} />
+            <text x={cx} y={cy} fontSize="16"
+                  fontFamily={window.FIL_FONT_DISPLAY} fill={P.paper}
+                  fontWeight="300"
+                  style={{ letterSpacing: '-0.02em' }}
+                  textAnchor="middle" dominantBaseline="central">{p.do_.pct}%</text>
+
+            {/* Topic label — to the side of the practice dot */}
+            <text x={lx} y={cy + 5} fontSize="14"
+                  fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                  fontWeight="500" textAnchor={lanchor}>
+              {topicFor[p.key] || p.key}
             </text>
           </g>
         );
