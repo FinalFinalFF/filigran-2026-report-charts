@@ -384,7 +384,7 @@ a { color: inherit; }
 
     <aside class="ff-report" aria-label="Where this chart maps in the whitepaper"><div class="ff-report__row"><span class="ff-report__label">Report section</span><span class="ff-report__value"><a href="https://docs.google.com/document/d/1ZnJm2yvdm2pxf_WWQimk9yuHWmeGplnd/edit" target="_blank" rel="noopener">The real cost of poor prioritization: wasted time</a></span></div><div class="ff-report__row"><span class="ff-report__label">Whitepaper figure</span><span class="ff-report__value"><span style="color: var(--ff-text-muted);">— not a numbered figure —</span></span><span class="ff-report__fit ff-report__fit--unnumbered">Not a numbered figure</span></div><p class="ff-report__note">Not a numbered figure. Visualizes the Q13 mean (42%) of analyst time spent on dead-end investigations — referenced in the whitepaper as part of the prioritization-bottleneck argument, not as a labeled figure.</p></aside>
 
-    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 534"></div></div>
+    <div class="ff-chart"><div class="ff-chart__inner" id="chart-root" style="aspect-ratio: 1200 / 572"></div></div>
 
     <div class="ff-callout">
       <div class="ff-callout__bar" aria-hidden="true"></div>
@@ -414,7 +414,7 @@ a { color: inherit; }
   <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" crossorigin="anonymous"></script>
 
-  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 228 1200 534";</script>
+  <script>window.FF_CHROMELESS = true; window.FF_VIEWBOX = "0 228 1200 572";</script>
 
   <script type="text/babel" data-presets="react">
 // shared/frame.jsx
@@ -684,26 +684,25 @@ function B7ArtboardWorkWeek() {
         return cells;
       })()}
 
-      {/* Single annotation into the red block — replaces the 17 repeated
-          "chasing a false lead" labels. */}
+      {/* Legend below the grid — labels the red vs light-blue meaning
+          once, instead of repeating per-cell or running an in-grid
+          annotation that clashed with the cell color. */}
       {(() => {
-        // Anchor the arrow into the middle of the red column block.
-        const targetX = startX + 0 * (cellW + gap) + cellW / 2;
-        const targetY = startY + 4 * (cellH + gap) + cellH / 2;
-        const labelX = startX + 2 * (cellW + gap);
-        const labelY = targetY - 38;
+        const legendY = startY + hoursPerDay * (cellH + gap) + 18;
+        const legendX = startX;
         return (
           <g>
-            <text x={labelX} y={labelY} fontSize="13"
-                  fontFamily={window.FIL_FONT_BODY} fill={P.paper}
-                  fontWeight="500" textAnchor="middle"
-                  style={{ paintOrder: 'stroke', stroke: P.accent, strokeWidth: 0 }}>
-              <tspan fill={P.accent} fontFamily={window.FIL_FONT_MONO}
-                     fontWeight="500" style={{ letterSpacing: '1px' }}>CHASING FALSE LEADS</tspan>
-            </text>
-            <path d={`M ${labelX} ${labelY + 8} Q ${labelX - 50} ${labelY + 32} ${targetX + 20} ${targetY - 16}`}
-                  stroke={P.accent} strokeWidth="1.5" fill="none"
-                  strokeDasharray="3 4" />
+            <rect x={legendX} y={legendY} width={20} height={12}
+                  fill={P.accent} rx="0" />
+            <text x={legendX + 28} y={legendY + 10} fontSize="12"
+                  fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                  fontWeight="400">Chasing false leads</text>
+
+            <rect x={legendX + 220} y={legendY} width={20} height={12}
+                  fill={P.blueTint} rx="0" />
+            <text x={legendX + 248} y={legendY + 10} fontSize="12"
+                  fontFamily={window.FIL_FONT_BODY} fill={P.ink}
+                  fontWeight="400">Productive time</text>
           </g>
         );
       })()}
